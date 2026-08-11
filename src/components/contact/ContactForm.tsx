@@ -138,7 +138,12 @@ export function ContactForm() {
     setServerError(null);
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-      if (value) formData.append(key, value);
+      // Append every field the schema knows about, even empty strings —
+      // otherwise fields like the honeypot (company_website) or company,
+      // which are meant to be empty, get dropped from FormData entirely and
+      // arrive server-side as `null` instead of `""`, which fails Zod
+      // validation. Only skip values that are genuinely absent.
+      if (value !== undefined && value !== null) formData.append(key, value);
     });
     if (attachment) {
       formData.append("attachment", attachment);

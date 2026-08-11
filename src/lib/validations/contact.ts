@@ -41,12 +41,20 @@ export const contactFormSchema = z.object({
     .max(100, "That company name looks a little too long.")
     .optional()
     .or(z.literal("")),
-  projectType: z.enum(PROJECT_TYPES, {
-    errorMap: () => ({ message: "Let us know what you're building." }),
-  }),
-  timeline: z.enum(ESTIMATED_TIMELINES, {
-    errorMap: () => ({ message: "Please select an estimated timeline." }),
-  }),
+  // Typed as a refined string (rather than z.enum) so the inferred TS type
+  // is `string`, not a strict literal union. That lets react-hook-form use
+  // "" as the pre-selection default value without a type error, while the
+  // refine still enforces the exact same set of valid options at runtime.
+  projectType: z
+    .string()
+    .refine((val) => (PROJECT_TYPES as readonly string[]).includes(val), {
+      message: "Let us know what you're building.",
+    }),
+  timeline: z
+    .string()
+    .refine((val) => (ESTIMATED_TIMELINES as readonly string[]).includes(val), {
+      message: "Please select an estimated timeline.",
+    }),
   budget: z.enum(BUDGET_RANGES).optional(),
   message: z
     .string()

@@ -19,16 +19,16 @@ export async function submitContactForm(
   _prevState: ContactFormState,
   formData: FormData
 ): Promise<ContactFormState> {
-  const raw = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    company: formData.get("company"),
-    projectType: formData.get("projectType"),
-    timeline: formData.get("timeline"),
-    budget: formData.get("budget") || undefined,
-    message: formData.get("message"),
-    company_website: formData.get("company_website"),
-  };
+const raw = {
+  name: formData.get("name"),
+  email: formData.get("email"),
+  company: formData.get("company") || undefined,
+  projectType: formData.get("projectType"),
+  timeline: formData.get("timeline"),
+  budget: formData.get("budget") || undefined,
+  message: formData.get("message"),
+  company_website: formData.get("company_website") || undefined,
+};
 
   const parsed = contactFormSchema.safeParse(raw);
 
