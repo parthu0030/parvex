@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
@@ -17,13 +17,10 @@ import {
   type ContactFormData,
 } from "@/lib/validations/contact";
 
-const fieldLabelClasses =
-  "text-[11px] font-medium tracking-[0.14em] uppercase text-[#6B6B6B]";
-
 const textInputClasses =
-  "w-full bg-transparent border-0 border-b border-[#E8E8E8] pb-3 text-[17px] md:text-[19px] text-[#0A0A0A] tracking-[-0.01em] placeholder:text-[#C0C0C0] focus:outline-none focus:border-[#0A0A0A] transition-colors duration-300";
+  "w-full bg-transparent border-0 border-b border-[#E8E8E8] pb-3 text-[22px] md:text-[28px] text-[#0A0A0A] tracking-[-0.02em] placeholder:text-[#C0C0C0] focus:outline-none focus:border-[#0A0A0A] transition-colors duration-300";
 
-function PillOption({
+function LargeOptionButton({
   label,
   selected,
   onClick,
@@ -38,8 +35,8 @@ function PillOption({
       onClick={onClick}
       aria-pressed={selected}
       className={cn(
-        "rounded-full border px-5 py-2.5 text-[13px] font-medium tracking-[-0.01em]",
-        "transition-all duration-250 ease-out",
+        "w-full text-center rounded-full border-2 px-6 py-4 text-[16px] md:text-[18px] font-medium tracking-wide",
+        "transition-all duration-300 ease-out",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2",
         selected
           ? "bg-[#0A0A0A] text-white border-[#0A0A0A]"
@@ -51,6 +48,8 @@ function PillOption({
   );
 }
 
+const TOTAL_STEPS = 4;
+
 export function ContactForm() {
   const revealRef = useReveal<HTMLDivElement>({ threshold: 0.08 });
   const [isPending, startTransition] = useTransition();
@@ -59,12 +58,16 @@ export function ContactForm() {
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  
+  const [step, setStep] = useState(1);
+  const [animating, setAnimating] = useState(false);
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    trigger,
     reset,
     formState: { errors },
   } = useForm<ContactFormData>({
@@ -83,6 +86,28 @@ export function ContactForm() {
   const projectType = watch("projectType");
   const budget = watch("budget");
   const timeline = watch("timeline");
+
+  // Smooth step transition logic
+  const changeStep = async (newStep: number) => {
+    if (newStep > step) {
+      // Validate current step before proceeding
+      const fieldsToValidate = (() => {
+        if (step === 1) return ["projectType"];
+        if (step === 2) return ["timeline", "budget"];
+        if (step === 3) return ["message"];
+        return [];
+      })();
+      
+      const isStepValid = await trigger(fieldsToValidate as any);
+      if (!isStepValid) return;
+    }
+
+    setAnimating(true);
+    setTimeout(() => {
+      setStep(newStep);
+      setAnimating(false);
+    }, 250); // Matches CSS transition duration
+  };
 
   const validateAndSetFile = (file: File) => {
     setAttachmentError(null);
@@ -138,11 +163,6 @@ export function ContactForm() {
     setServerError(null);
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-      // Append every field the schema knows about, even empty strings —
-      // otherwise fields like the honeypot (company_website) or company,
-      // which are meant to be empty, get dropped from FormData entirely and
-      // arrive server-side as `null` instead of `""`, which fails Zod
-      // validation. Only skip values that are genuinely absent.
       if (value !== undefined && value !== null) formData.append(key, value);
     });
     if (attachment) {
@@ -155,6 +175,7 @@ export function ContactForm() {
         setSubmitted(true);
         setAttachment(null);
         reset();
+        setStep(1);
       } else if (result.status === "error") {
         setServerError(result.message);
       }
@@ -165,26 +186,21 @@ export function ContactForm() {
     return (
       <section className="py-24 md:py-32 bg-white" aria-live="polite">
         <Container>
-          <div
-            data-reveal
-            data-revealed="true"
-            data-reveal-type="scale"
-            className="flex flex-col items-center text-center gap-6 max-w-[520px] mx-auto py-16"
-          >
-            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#0A0A0A]">
-              <Check size={22} className="text-white" strokeWidth={2.5} />
+          <div className="flex flex-col items-center text-center gap-6 max-w-[520px] mx-auto py-16 animate-in fade-in zoom-in duration-500">
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#0A0A0A]">
+              <Check size={26} className="text-white" strokeWidth={2.5} />
             </div>
-            <h2 className="font-semibold tracking-[-0.03em] text-2xl md:text-[28px] text-[#0A0A0A]">
+            <h2 className="font-semibold tracking-tight text-3xl md:text-[36px] text-[#0A0A0A]">
               Message sent.
             </h2>
-            <p className="text-[15px] text-[#6B6B6B] leading-[1.7]">
+            <p className="text-[16px] text-[#6B6B6B] leading-[1.7]">
               Thanks for reaching out — we read every message ourselves and
               reply within 24 hours.
             </p>
             <Button
               variant="secondary"
-              size="md"
-              className="mt-2 btn-interactive"
+              size="lg"
+              className="mt-6 rounded-full px-8"
               onClick={() => setSubmitted(false)}
             >
               Send another message
@@ -196,269 +212,339 @@ export function ContactForm() {
   }
 
   return (
-    <section className="py-4 md:py-8 bg-white" aria-labelledby="contact-form-heading">
+    <section className="py-12 md:py-24 bg-white" aria-labelledby="contact-form-heading">
       <Container>
-        <div
-          ref={revealRef}
-          data-reveal
-          data-reveal-type="fade"
-          className="max-w-[720px]"
-        >
+        <div ref={revealRef} className="max-w-[720px] mx-auto">
           <h2 id="contact-form-heading" className="sr-only">
             Send us a message
           </h2>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            className="flex flex-col gap-12 md:gap-14"
-          >
-            {/* Name + Email */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
-              <div className="flex flex-col gap-3">
-                <label htmlFor="name" className={fieldLabelClasses}>
-                  Your name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  autoComplete="name"
-                  placeholder="Jordan Rivera"
-                  aria-invalid={!!errors.name}
-                  aria-describedby={errors.name ? "name-error" : undefined}
-                  className={textInputClasses}
-                  {...register("name")}
-                />
-                {errors.name && (
-                  <p id="name-error" className="text-[13px] text-[#B3261E]">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <label htmlFor="email" className={fieldLabelClasses}>
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="jordan@company.com"
-                  aria-invalid={!!errors.email}
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                  className={textInputClasses}
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p id="email-error" className="text-[13px] text-[#B3261E]">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Company */}
-            <div className="flex flex-col gap-3">
-              <label htmlFor="company" className={fieldLabelClasses}>
-                Company <span className="normal-case text-[#C0C0C0]">(optional)</span>
-              </label>
-              <input
-                id="company"
-                type="text"
-                autoComplete="organization"
-                placeholder="Acme Inc."
-                className={textInputClasses}
-                {...register("company")}
-              />
-            </div>
-
-            {/* Project Type */}
-            <div className="flex flex-col gap-4">
-              <span className={fieldLabelClasses}>What are you building?</span>
-              <div className="flex flex-wrap gap-2.5" role="group" aria-label="Project type">
-                {PROJECT_TYPES.map((type) => (
-                  <PillOption
-                    key={type}
-                    label={type}
-                    selected={projectType === type}
-                    onClick={() =>
-                      setValue("projectType", type, { shouldValidate: true })
-                    }
+          {/* Progress Indicator */}
+          <div className="flex items-center justify-center mb-16">
+            <div className="flex items-center gap-2 md:gap-4">
+              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+                <div key={i} className="flex items-center gap-2 md:gap-4">
+                  <div
+                    className={cn(
+                      "w-3 h-3 rounded-full transition-colors duration-300",
+                      step >= i + 1 ? "bg-[#0A0A0A]" : "bg-[#E8E8E8]"
+                    )}
                   />
-                ))}
-              </div>
-              {errors.projectType && (
-                <p className="text-[13px] text-[#B3261E]">
-                  {errors.projectType.message}
-                </p>
+                  {i < TOTAL_STEPS - 1 && (
+                    <div
+                      className={cn(
+                        "w-8 md:w-16 h-[2px] transition-colors duration-300",
+                        step > i + 1 ? "bg-[#0A0A0A]" : "bg-[#E8E8E8]"
+                      )}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <div
+              className={cn(
+                "transition-all duration-250 ease-in-out",
+                animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
               )}
-            </div>
-
-            {/* Timeline */}
-            <div className="flex flex-col gap-4">
-              <span className={fieldLabelClasses}>Estimated Timeline</span>
-              <div className="flex flex-wrap gap-2.5" role="group" aria-label="Project timeline">
-                {ESTIMATED_TIMELINES.map((time) => (
-                  <PillOption
-                    key={time}
-                    label={time}
-                    selected={timeline === time}
-                    onClick={() =>
-                      setValue("timeline", time, { shouldValidate: true })
-                    }
-                  />
-                ))}
-              </div>
-              {errors.timeline && (
-                <p className="text-[13px] text-[#B3261E]">
-                  {errors.timeline.message}
-                </p>
+            >
+              {/* STEP 1: PROJECT TYPE */}
+              {step === 1 && (
+                <div className="flex flex-col gap-10">
+                  <div className="text-center mb-2">
+                    <h3 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#0A0A0A] mb-4">
+                      What are you building?
+                    </h3>
+                    <p className="text-[#6B6B6B] text-[18px]">Select the primary focus of your project.</p>
+                  </div>
+                  <div className="flex flex-col gap-3 max-w-[500px] mx-auto w-full" role="group" aria-label="Project type">
+                    {PROJECT_TYPES.map((type) => (
+                      <LargeOptionButton
+                        key={type}
+                        label={type}
+                        selected={projectType === type}
+                        onClick={() => {
+                          setValue("projectType", type, { shouldValidate: true });
+                          setTimeout(() => changeStep(2), 300);
+                        }}
+                      />
+                    ))}
+                  </div>
+                  {errors.projectType && (
+                    <p className="text-[15px] text-[#B3261E] text-center mt-2 font-medium">
+                      {errors.projectType.message}
+                    </p>
+                  )}
+                </div>
               )}
-            </div>
 
-            {/* Budget */}
-            <div className="flex flex-col gap-4">
-              <span className={fieldLabelClasses}>
-                Estimated Budget <span className="normal-case text-[#C0C0C0]">(optional)</span>
-              </span>
-              <div className="flex flex-wrap gap-2.5" role="group" aria-label="Project budget">
-                {BUDGET_RANGES.map((range) => (
-                  <PillOption
-                    key={range}
-                    label={range}
-                    selected={budget === range}
-                    onClick={() =>
-                      setValue("budget", budget === range ? undefined : range, {
-                        shouldValidate: true,
-                      })
-                    }
-                  />
-                ))}
-              </div>
-            </div>
+              {/* STEP 2: TIMELINE & BUDGET */}
+              {step === 2 && (
+                <div className="flex flex-col gap-12">
+                  <div className="text-center">
+                    <h3 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#0A0A0A] mb-4">
+                      What are the constraints?
+                    </h3>
+                  </div>
 
-            {/* Message */}
-            <div className="flex flex-col gap-3">
-              <label htmlFor="message" className={fieldLabelClasses}>
-                Tell us about your project
-              </label>
-              <textarea
-                id="message"
-                rows={4}
-                placeholder="What are you trying to build, and what does success look like?"
-                aria-invalid={!!errors.message}
-                aria-describedby={errors.message ? "message-error" : undefined}
-                className={cn(textInputClasses, "resize-none")}
-                {...register("message")}
-              />
-              {errors.message && (
-                <p id="message-error" className="text-[13px] text-[#B3261E]">
-                  {errors.message.message}
-                </p>
-              )}
-            </div>
-
-            {/* Attachment Area */}
-            <div className="flex flex-col gap-3">
-              <span className={fieldLabelClasses}>
-                Attachment <span className="normal-case text-[#C0C0C0]">(optional)</span>
-              </span>
-              <div
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
-                onDrop={handleDrop}
-                className={cn(
-                  "border border-dashed rounded-[12px] p-6 text-center transition-all duration-300 relative cursor-pointer",
-                  dragActive ? "border-[#0A0A0A] bg-[#0A0A0A]/5" : "border-[#E8E8E8] hover:border-[#6B6B6B]",
-                  attachment ? "border-solid border-[#0A0A0A]/10 bg-[#F7F7F7]" : ""
-                )}
-              >
-                <input
-                  type="file"
-                  id="attachment-upload"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  accept=".pdf,.docx,.zip,.png,.jpg,.jpeg"
-                  onChange={handleFileChange}
-                />
-
-                {attachment ? (
-                  <div className="flex items-center justify-between gap-4 pointer-events-auto">
-                    <div className="flex flex-col items-start text-left min-w-0">
-                      <span className="text-[14px] font-medium text-[#0A0A0A] truncate max-w-[260px] sm:max-w-[450px]">
-                        {attachment.name}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14">
+                    {/* Timeline */}
+                    <div className="flex flex-col gap-6">
+                      <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-[#6B6B6B] text-center">
+                        Estimated Timeline
                       </span>
-                      <span className="text-[12px] text-[#6B6B6B]">
-                        {formatFileSize(attachment.size)}
-                      </span>
+                      <div className="flex flex-col gap-3" role="group" aria-label="Project timeline">
+                        {ESTIMATED_TIMELINES.map((time) => (
+                          <LargeOptionButton
+                            key={time}
+                            label={time}
+                            selected={timeline === time}
+                            onClick={() => setValue("timeline", time, { shouldValidate: true })}
+                          />
+                        ))}
+                      </div>
+                      {errors.timeline && (
+                        <p className="text-[14px] text-[#B3261E] text-center">
+                          {errors.timeline.message}
+                        </p>
+                      )}
                     </div>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setAttachment(null);
-                      }}
-                      className="text-[13px] font-medium text-[#B3261E] hover:underline cursor-pointer"
-                    >
-                      Remove
-                    </button>
+
+                    {/* Budget */}
+                    <div className="flex flex-col gap-6">
+                      <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-[#6B6B6B] text-center">
+                        Estimated Budget <span className="normal-case text-[#C0C0C0] font-medium">(optional)</span>
+                      </span>
+                      <div className="flex flex-col gap-3" role="group" aria-label="Project budget">
+                        {BUDGET_RANGES.map((range) => (
+                          <LargeOptionButton
+                            key={range}
+                            label={range}
+                            selected={budget === range}
+                            onClick={() =>
+                              setValue("budget", budget === range ? undefined : range, {
+                                shouldValidate: true,
+                              })
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-1.5 pointer-events-none">
-                    <p className="text-[14px] text-[#0A0A0A] font-medium">
-                      Drag and drop your file here, or <span className="underline">browse</span>
-                    </p>
-                    <p className="text-[12px] text-[#6B6B6B]">
-                      Share a brief, wireframe, reference, or project document. Max 10 MB.
-                    </p>
-                  </div>
-                )}
-              </div>
-              {attachmentError && (
-                <p className="text-[13px] text-[#B3261E]">
-                  {attachmentError}
-                </p>
+                </div>
               )}
+
+              {/* STEP 3: MESSAGE & ATTACHMENT */}
+              {step === 3 && (
+                <div className="flex flex-col gap-10">
+                  <div className="text-center">
+                    <h3 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#0A0A0A] mb-4">
+                      Tell us about it
+                    </h3>
+                  </div>
+
+                  <div className="flex flex-col gap-4">
+                    <textarea
+                      id="message"
+                      rows={5}
+                      placeholder="What are you trying to build, and what does success look like?"
+                      aria-invalid={!!errors.message}
+                      className={cn(textInputClasses, "resize-none border border-[#E8E8E8] rounded-2xl p-6 bg-[#FAFAFA] focus:bg-white text-[18px] md:text-[20px]")}
+                      {...register("message")}
+                    />
+                    {errors.message && (
+                      <p className="text-[15px] font-medium text-[#B3261E]">
+                        {errors.message.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Attachment Area */}
+                  <div className="flex flex-col gap-4">
+                    <span className="text-[13px] font-bold tracking-[0.14em] uppercase text-[#6B6B6B]">
+                      Attachment <span className="normal-case text-[#C0C0C0] font-medium">(optional)</span>
+                    </span>
+                    <div
+                      onDragEnter={handleDrag}
+                      onDragOver={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDrop={handleDrop}
+                      className={cn(
+                        "border-2 border-dashed rounded-[16px] p-8 text-center transition-all duration-300 relative cursor-pointer",
+                        dragActive ? "border-[#0A0A0A] bg-[#0A0A0A]/5" : "border-[#E8E8E8] hover:border-[#6B6B6B]",
+                        attachment ? "border-solid border-[#0A0A0A]/10 bg-[#FAFAFA]" : ""
+                      )}
+                    >
+                      <input
+                        type="file"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        accept=".pdf,.docx,.zip,.png,.jpg,.jpeg"
+                        onChange={handleFileChange}
+                      />
+
+                      {attachment ? (
+                        <div className="flex items-center justify-between gap-4 pointer-events-auto">
+                          <div className="flex flex-col items-start text-left min-w-0">
+                            <span className="text-[16px] font-medium text-[#0A0A0A] truncate max-w-[260px] sm:max-w-[450px]">
+                              {attachment.name}
+                            </span>
+                            <span className="text-[14px] text-[#6B6B6B]">
+                              {formatFileSize(attachment.size)}
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setAttachment(null);
+                            }}
+                            className="text-[14px] font-medium text-[#B3261E] hover:underline cursor-pointer px-2"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 pointer-events-none">
+                          <p className="text-[16px] text-[#0A0A0A] font-medium">
+                            Drag and drop your file here, or <span className="underline">browse</span>
+                          </p>
+                          <p className="text-[14px] text-[#6B6B6B]">
+                            Share a brief, wireframe, reference, or project document. Max 10 MB.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    {attachmentError && (
+                      <p className="text-[15px] font-medium text-[#B3261E]">
+                        {attachmentError}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* STEP 4: CONTACT DETAILS */}
+              {step === 4 && (
+                <div className="flex flex-col gap-12">
+                  <div className="text-center">
+                    <h3 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#0A0A0A] mb-4">
+                      Who are we talking to?
+                    </h3>
+                  </div>
+
+                  <div className="flex flex-col gap-10 max-w-[500px] mx-auto w-full">
+                    <div className="flex flex-col gap-3">
+                      <input
+                        type="text"
+                        placeholder="Your full name"
+                        aria-invalid={!!errors.name}
+                        className={textInputClasses}
+                        {...register("name")}
+                      />
+                      {errors.name && (
+                        <p className="text-[15px] font-medium text-[#B3261E]">
+                          {errors.name.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      <input
+                        type="email"
+                        placeholder="Your email address"
+                        aria-invalid={!!errors.email}
+                        className={textInputClasses}
+                        {...register("email")}
+                      />
+                      {errors.email && (
+                        <p className="text-[15px] font-medium text-[#B3261E]">
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      <input
+                        type="text"
+                        placeholder="Company name (optional)"
+                        className={textInputClasses}
+                        {...register("company")}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Honeypot */}
+                  <input type="hidden" {...register("projectType")} value={projectType ?? ""} />
+                  <input type="hidden" {...register("timeline")} value={timeline ?? ""} />
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute -left-[9999px] w-px h-px opacity-0"
+                    value=""
+                    {...register("company_website")}
+                  />
+
+                  {serverError && (
+                    <div className="mt-8 p-4 bg-[#FFF5F5] rounded-xl text-center">
+                      <p role="alert" className="text-[15px] text-[#B3261E] font-medium">
+                        {serverError}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
             </div>
 
-            {/* Honeypot — hidden from real visitors */}
-            <input type="hidden" {...register("projectType")} value={projectType ?? ""} />
-            <input type="hidden" {...register("timeline")} value={timeline ?? ""} />
-            <input
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-              className="absolute -left-[9999px] w-px h-px opacity-0"
-              value=""
-              {...register("company_website")}
-            />
+            {/* Navigation Buttons */}
+            <div className="flex items-center justify-between mt-16 pt-8 border-t border-[#E8E8E8]">
+              {step > 1 ? (
+                <button
+                  type="button"
+                  onClick={() => changeStep(step - 1)}
+                  className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#0A0A0A] transition-colors font-medium text-[16px] py-2"
+                >
+                  <ArrowLeft size={18} />
+                  Back
+                </button>
+              ) : (
+                <div /> // Spacer
+              )}
 
-            {serverError && (
-              <p role="alert" className="text-[14px] text-[#B3261E]">
-                {serverError}
-              </p>
-            )}
-
-            <div className="flex items-center gap-4">
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                disabled={isPending}
-                className="btn-interactive min-w-[180px]"
-              >
-                {isPending ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" aria-hidden="true" />
-                    Sending…
-                  </>
-                ) : (
-                  <>Send Message →</>
-                )}
-              </Button>
+              {step < TOTAL_STEPS ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="lg"
+                  className="rounded-full px-8 text-[16px]"
+                  onClick={() => changeStep(step + 1)}
+                >
+                  Continue
+                  <ArrowRight size={18} className="ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  disabled={isPending}
+                  className="rounded-full px-10 text-[16px]"
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin mr-2" aria-hidden="true" />
+                      Sending…
+                    </>
+                  ) : (
+                    <>Submit</>
+                  )}
+                </Button>
+              )}
             </div>
           </form>
         </div>
