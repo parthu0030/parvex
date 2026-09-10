@@ -23,7 +23,7 @@ const PHOTO_TILE_CLASSES = [
  */
 export function WorkPhotography() {
   const headerRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
-  const gridRef = useRevealChildren<HTMLDivElement>(70, { threshold: 0.04 });
+  const gridRef = useRevealChildren<HTMLDivElement>(25, { threshold: 0 });
 
   return (
     <section
