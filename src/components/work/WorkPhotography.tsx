@@ -7,6 +7,14 @@ import { PHOTOGRAPHY } from "@/data/photography";
 import { useReveal, useRevealChildren } from "@/hooks/useReveal";
 
 const PHOTOS = PHOTOGRAPHY;
+const PHOTO_TILE_CLASSES = [
+  "col-span-2 md:col-span-3 row-span-2",
+  "col-span-1 md:col-span-3 row-span-1",
+  "col-span-1 md:col-span-2 row-span-2",
+  "col-span-1 md:col-span-2 row-span-1",
+  "col-span-2 md:col-span-4 row-span-2",
+  "col-span-1 md:col-span-2 row-span-1",
+];
 
 /**
  * WorkPhotography — large editorial gallery for the Work page.
@@ -36,11 +44,13 @@ export function WorkPhotography() {
           ref={gridRef}
           className="grid grid-cols-2 md:grid-cols-6 gap-4 md:gap-5 auto-rows-[220px] md:auto-rows-[280px]"
         >
-          <PhotoTile item={PHOTOS[0]} className="col-span-2 md:col-span-3 row-span-2" />
-          <PhotoTile item={PHOTOS[1]} className="col-span-1 md:col-span-3 row-span-1" />
-          <PhotoTile item={PHOTOS[2]} className="hidden md:block md:col-span-3 row-span-1" />
-          <PhotoTile item={PHOTOS[3]} className="col-span-1 md:col-span-2 row-span-1" />
-          <PhotoTile item={PHOTOS[4] ?? PHOTOS[0]} className="hidden md:block md:col-span-4 row-span-1" />
+          {PHOTOS.map((photo, index) => (
+            <PhotoTile
+              key={photo.id}
+              item={photo}
+              className={PHOTO_TILE_CLASSES[index % PHOTO_TILE_CLASSES.length]}
+            />
+          ))}
         </div>
       </Container>
     </section>
