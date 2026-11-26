@@ -72,6 +72,15 @@ export function CustomCursor() {
     // Cursor state: expand on interactive elements
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+
+      // Invert over dark surfaces (dark sections, the photo viewer) so the
+      // cursor never disappears black-on-black.
+      const onDark = !!target.closest('[data-nav-theme="dark"], [role="dialog"]');
+      const tone = onDark ? "light" : "dark";
+      if (ring.dataset.tone !== tone) {
+        ring.dataset.tone = tone;
+        dot.dataset.tone = tone;
+      }
       const interactive = target.closest(
         "a, button, [data-cursor], [role='button'], input, textarea, select, label"
       ) as HTMLElement | null;
@@ -195,6 +204,19 @@ export function CustomCursor() {
           margin-left: -30px;
           background-color: #0A0A0A;
           border-color: #0A0A0A;
+        }
+        .cursor-dot[data-tone="light"] {
+          background-color: #ffffff !important;
+        }
+        .cursor-ring[data-tone="light"] {
+          border-color: rgba(255, 255, 255, 0.85) !important;
+        }
+        .cursor-ring[data-tone="light"][data-expanded="true"] {
+          background-color: #ffffff;
+          border-color: #ffffff !important;
+        }
+        .cursor-ring[data-tone="light"] > span {
+          color: #0a0a0a !important;
         }
         @media (pointer: coarse) {
           .cursor-dot,

@@ -182,7 +182,7 @@ const PRESENTATION: Record<string, ServicePresentation> = {
     discipline: "Brand & Visual",
     idealFor: "Launches, events and brands ready to tell their story in motion.",
     tags: ["Brand film", "Events", "Social"],
-    image: { src: STAGE_PHOTO.src, alt: "Parvex photograph of a live stage performance in haze and spotlight" },
+    image: { src: STAGE_PHOTO.src, alt: "Parvex photograph of a live stage performance in haze and spotlight", mono: STAGE_PHOTO.mono },
   },
   "video-editing": {
     discipline: "Brand & Visual",

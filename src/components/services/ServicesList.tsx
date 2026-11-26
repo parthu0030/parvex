@@ -97,7 +97,7 @@ function ServiceGroup({ items, startIndex }: { items: ServiceListItemView[]; sta
                 src={imageSrc}
                 alt={imageAlt}
                 fill
-                className={cn("object-cover object-center", imageSrc.includes("images.unsplash.com") && "img-mono")}
+                className={cn("object-cover object-center", (imageSrc.includes("images.unsplash.com") || (!service.imageUrl && presentation.image.mono)) && "img-mono")}
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>

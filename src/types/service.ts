@@ -20,5 +20,6 @@ export interface ServicePresentation {
   idealFor: string;
   /** Short tags rendered beside the service title. */
   tags: string[];
-  image: { src: string; alt: string };
+  /** `mono` marks a colour original that should render in monochrome. */
+  image: { src: string; alt: string; mono?: boolean };
 }

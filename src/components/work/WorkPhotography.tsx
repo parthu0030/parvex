@@ -1,186 +1,181 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import Image from "next/image";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import type { Photo } from "@/types";
 import { Container } from "@/components/ui/Container";
-import { PHOTOGRAPHY } from "@/data/photography";
-import { useReveal } from "@/hooks/useReveal";
-import { cn } from "@/lib/utils";
+import { PHOTO_COLLECTIONS, getCollection, type PhotoCollectionKey } from "@/data/photography";
+import { useReveal, useRevealChildren } from "@/hooks/useReveal";
+import { CinematicGallery, JustifiedGallery, type OpenPhoto } from "@/components/work/photography/PhotoLayouts";
+import { PhotoLightbox } from "@/components/work/photography/PhotoLightbox";
 
-const SERIES = [
-  { key: "Landscape", title: "Landscape", note: "High-altitude Ladakh, in monochrome." },
-  { key: "Street", title: "Street", note: "Documentary portraits and everyday moments." },
-] as const;
+/** Desktop row rhythm per collection (row lengths). */
+const ROW_PATTERNS: Partial<Record<PhotoCollectionKey, number[]>> = {
+  Landscape: [2, 3, 2],
+  // Rows of 3/5/4 keep every portrait shorter than a laptop viewport.
+  Editorial: [3, 5, 4],
+};
 
-type SeriesKey = (typeof SERIES)[number]["key"];
+/** Crop focus for letterboxed frames, so subjects stay in shot. */
+const CINEMATIC_FOCUS: Record<string, string> = {
+  "landscape-peak": "center 58%",
+  "landscape-snowline": "center 62%",
+  "landscape-hills": "center 55%",
+  "stage-performance": "center 80%",
+};
+
+const anchor = (key: string) => `photography-${key.toLowerCase()}`;
 
 /**
- * WorkPhotography — Parvex's own photography as two curated series, with a
- * keyboard-accessible full-screen viewer.
+ * WorkPhotography — the dedicated photography portfolio.
+ *
+ * Dark, immersive section with three chapters that genuinely fit the work:
+ * Landscape (including the frames that used to sit on the homepage),
+ * Cinematic Frames and Editorial street portraits. Every frame opens in a
+ * high-quality full-screen viewer.
  */
 export function WorkPhotography() {
   const headerRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
-  const [series, setSeries] = useState<SeriesKey>("Landscape");
-  const [open, setOpen] = useState<number | null>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
+  const [viewer, setViewer] = useState<{ title: string; photos: Photo[]; index: number } | null>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
 
-  const photos = PHOTOGRAPHY.filter((p) => p.category === series);
-
+  const openIn = useCallback(
+    (title: string): OpenPhoto =>
+      (photos, index, trigger) => {
+        // Store the clicked frame itself: Safari doesn't focus buttons on
+        // click, so document.activeElement can't be relied on.
+        lastTrigger.current = trigger;
+        setViewer({ title, photos, index });
+      },
+    []
+  );
   const close = useCallback(() => {
-    setOpen(null);
+    setViewer(null);
     lastTrigger.current?.focus();
   }, []);
-  const step = useCallback(
-    (dir: 1 | -1) => setOpen((i) => (i === null ? i : (i + dir + photos.length) % photos.length)),
-    [photos.length]
-  );
+  const setIndex = useCallback((index: number) => setViewer((v) => (v ? { ...v, index } : v)), []);
 
-  useEffect(() => {
-    if (open === null) return;
-    closeRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowRight") step(1);
-      if (e.key === "ArrowLeft") step(-1);
-    };
-    document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [open, close, step]);
-
-  const current = open === null ? null : photos[open];
+  const total = PHOTO_COLLECTIONS.reduce((n, c) => n + getCollection(c.key).length, 0);
 
   return (
     <section
       id="photography"
-      className="scroll-mt-24 py-24 md:py-32 lg:py-40 bg-[#F6F6F5]"
+      data-nav-theme="dark"
+      className="scroll-mt-0 bg-[#0A0A0A] text-white py-24 md:py-32 lg:py-40"
       aria-labelledby="work-photography-heading"
     >
       <Container>
+        {/* Section intro + chapter index */}
         <div
           ref={headerRef}
           data-reveal
-          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12 md:mb-16"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-end pb-16 md:pb-24"
         >
-          <div className="flex flex-col gap-6 max-w-[640px]">
-            <span className="eyebrow">Photography</span>
+          <div className="lg:col-span-7 flex flex-col gap-7">
+            <span className="eyebrow !text-white/40">Photography</span>
             <h2
               id="work-photography-heading"
-              className="font-semibold tracking-[-0.035em] leading-[1.05] text-[#0A0A0A] text-[34px] md:text-5xl"
+              className="font-semibold tracking-[-0.045em] leading-[0.98]"
+              style={{ fontSize: "clamp(40px, 6.4vw, 92px)" }}
             >
               Frames worth
-              <span className="font-light italic text-[#6B6B6B]"> holding onto.</span>
+              <span className="font-light italic text-white/45"> holding onto.</span>
             </h2>
-            <p className="text-[16px] text-[#6B6B6B] leading-[1.7]">
-              {SERIES.find((s) => s.key === series)?.note} All photographs by Parvex.
+            <p className="text-[16px] md:text-[18px] text-white/60 leading-[1.75] max-w-[560px]">
+              Composition, patience and light — the same instincts we bring to
+              brand, product and event shoots for clients. Every photograph
+              here was made by Parvex.
             </p>
           </div>
 
-          <div role="tablist" aria-label="Photography series" className="flex gap-2">
-            {SERIES.map((s) => (
-              <button
-                key={s.key}
-                role="tab"
-                type="button"
-                aria-selected={series === s.key}
-                onClick={() => setSeries(s.key)}
-                className={cn(
-                  "rounded-full border px-5 py-2.5 text-[13px] font-medium transition-colors duration-300",
-                  series === s.key
-                    ? "bg-[#0A0A0A] border-[#0A0A0A] text-white"
-                    : "border-[#CFCFCF] text-[#6B6B6B] hover:border-[#0A0A0A] hover:text-[#0A0A0A]"
-                )}
+          <nav aria-label="Photography collections" className="lg:col-span-5 flex flex-col border-t border-white/10">
+            {PHOTO_COLLECTIONS.map((c, i) => (
+              <a
+                key={c.key}
+                href={`#${anchor(c.key)}`}
+                className="group flex items-center justify-between gap-4 py-4 border-b border-white/10 text-[15px]"
               >
-                {s.title}
-                <span className="ml-2 tabular-nums opacity-60">
-                  {PHOTOGRAPHY.filter((p) => p.category === s.key).length}
+                <span className="flex items-center gap-4">
+                  <span className="text-[12px] text-white/35 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="link-draw text-white/85 group-hover:text-white">{c.title}</span>
                 </span>
-              </button>
+                <span className="text-[13px] text-white/40 tabular-nums">{getCollection(c.key).length}</span>
+              </a>
             ))}
-          </div>
+            <p className="pt-4 text-[12px] text-white/35 tabular-nums">{total} photographs · Click any frame to view full screen</p>
+          </nav>
         </div>
 
-        {/* Editorial masonry — CSS columns keep each photo's own aspect ratio */}
-        <div key={series} role="tabpanel" aria-label={`${series} series`} className="columns-2 md:columns-3 gap-3 md:gap-5 animate-[fadeIn_600ms_ease-out]">
-          {photos.map((photo, i) => (
-            <button
-              key={photo.id}
-              type="button"
-              onClick={(e) => {
-                lastTrigger.current = e.currentTarget;
-                setOpen(i);
-              }}
-              className="group relative block w-full mb-3 md:mb-5 overflow-hidden rounded-[10px] bg-[#E2E2E2] break-inside-avoid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2"
-              aria-label={`View larger: ${photo.alt}`}
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                width={photo.aspect === "portrait" ? 1650 : 2200}
-                height={photo.aspect === "portrait" ? 2200 : 1650}
-                className="w-full h-auto transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                sizes="(max-width: 768px) 50vw, 33vw"
-              />
-            </button>
+        {/* Chapters */}
+        <div className="flex flex-col gap-24 md:gap-36">
+          {PHOTO_COLLECTIONS.map((c, i) => (
+            <Chapter
+              key={c.key}
+              index={i}
+              collection={c}
+              onOpen={openIn(c.title)}
+            />
           ))}
         </div>
       </Container>
 
-      {current && createPortal(
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={current.alt}
-          className="fixed inset-0 z-[60] bg-[#0A0A0A]/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-12 animate-[fadeIn_250ms_ease-out]"
-          onClick={close}
-        >
-          <div className="relative w-full h-full" onClick={(e) => e.stopPropagation()}>
-            <Image
-              src={current.src}
-              alt={current.alt}
-              fill
-              className="object-contain"
-              sizes="100vw"
-            />
-          </div>
-          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-[13px] text-white/60 text-center max-w-[80vw]">
-            {current.alt} · {(open ?? 0) + 1} / {photos.length}
-          </p>
-          <button
-            ref={closeRef}
-            type="button"
-            onClick={close}
-            aria-label="Close viewer"
-            className="absolute top-4 right-4 md:top-6 md:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
-          >
-            <X size={20} />
-          </button>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); step(-1); }}
-            aria-label="Previous photo"
-            className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
-          >
-            <ChevronLeft size={22} />
-          </button>
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); step(1); }}
-            aria-label="Next photo"
-            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
-          >
-            <ChevronRight size={22} />
-          </button>
-        </div>,
-        document.body
+      {viewer && (
+        <PhotoLightbox
+          photos={viewer.photos}
+          index={viewer.index}
+          collectionTitle={viewer.title}
+          onIndexChange={setIndex}
+          onClose={close}
+        />
       )}
     </section>
+  );
+}
+
+function Chapter({
+  index,
+  collection,
+  onOpen,
+}: {
+  index: number;
+  collection: (typeof PHOTO_COLLECTIONS)[number];
+  onOpen: OpenPhoto;
+}) {
+  const headRef = useReveal<HTMLDivElement>({ threshold: 0.2 });
+  const galleryRef = useRevealChildren<HTMLDivElement>(90, { threshold: 0.02 });
+  const photos = getCollection(collection.key);
+
+  return (
+    <article id={anchor(collection.key)} className="scroll-mt-24" aria-labelledby={`${anchor(collection.key)}-title`}>
+      <div
+        ref={headRef}
+        data-reveal
+        className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-10 items-end mb-8 md:mb-12 pb-6 border-b border-white/10"
+      >
+        <div className="md:col-span-7 flex items-baseline gap-4 md:gap-6">
+          <span className="text-[13px] text-white/35 tabular-nums">{String(index + 1).padStart(2, "0")}</span>
+          <h3
+            id={`${anchor(collection.key)}-title`}
+            className="font-semibold tracking-[-0.035em] leading-[1.02]"
+            style={{ fontSize: "clamp(30px, 4vw, 56px)" }}
+          >
+            {collection.title}
+          </h3>
+        </div>
+        <div className="md:col-span-5 flex flex-col gap-2 md:items-end md:text-right">
+          <span className="text-[11px] tracking-[0.16em] uppercase text-white/40">
+            {collection.kicker} · {photos.length} frames
+          </span>
+          <p className="text-[15px] text-white/60 leading-[1.7] max-w-[420px]">{collection.description}</p>
+        </div>
+      </div>
+
+      <div ref={galleryRef}>
+        {collection.key === "Cinematic" ? (
+          <CinematicGallery photos={photos} focus={CINEMATIC_FOCUS} onOpen={onOpen} />
+        ) : (
+          <JustifiedGallery photos={photos} pattern={ROW_PATTERNS[collection.key] ?? [3]} onOpen={onOpen} />
+        )}
+      </div>
+    </article>
   );
 }

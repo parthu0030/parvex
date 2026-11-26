@@ -155,11 +155,11 @@ export const PROJECTS: CaseStudyProject[] = [
     thumbnailAlt: "Photography Showcase cover — a lone snow peak above cloud",
     services: ["Creative Direction", "Photography", "UI/UX Design", "Web Development"],
     challenge:
-      "Photography portfolios usually fail in one of two ways: so bare the images lose context, or so designed that the interface competes with the work. Our own landscape and street series needed a home that felt as considered as the photographs.",
+      "Photography portfolios usually fail in one of two ways: so bare the images lose context, or so designed that the interface competes with the work. Our own landscape, cinematic and street work needed a home that felt as considered as the photographs.",
     solution:
       "A layout system that treats whitespace as the main design element. Series are grouped editorially, navigation stays quiet until it's needed and typography is kept to a minimum. The first thing a visitor notices is always the photograph.",
     research:
-      "We curated before we designed: cutting duplicates and near-misses, sequencing each series for rhythm, and committing to monochrome so landscapes and street portraits read as one body of work.",
+      "We curated before we designed: cutting duplicates and near-misses, sequencing each collection for rhythm, and committing to monochrome so landscapes, cinematic frames and street portraits read as one body of work.",
     development:
       "Images are exported at web-appropriate sizes, served responsively through Next.js image optimisation and lazy-loaded below the fold. A full-screen viewer supports keyboard navigation for anyone who wants to look closer.",
     technology: [
@@ -175,7 +175,7 @@ export const PROJECTS: CaseStudyProject[] = [
       { src: getPhoto("street-mother").src, alt: getPhoto("street-mother").alt, aspect: "portrait" },
     ],
     results: [
-      { metric: "Curated", value: "Two series", description: "Landscape and Street, sequenced as a single monochrome body of work." },
+      { metric: "Curated", value: "Three collections", description: "Landscape, Cinematic Frames and Editorial, sequenced as a single monochrome body of work." },
       { metric: "Lightweight", value: "Web-sized exports", description: "Camera originals are never sent to visitors." },
       { metric: "Accessible", value: "Keyboard viewer", description: "Full-screen viewing with arrow-key navigation and descriptive alt text." },
     ],

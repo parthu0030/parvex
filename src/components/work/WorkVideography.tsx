@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { STAGE_PHOTO } from "@/data/photography";
 import { IMAGERY } from "@/data/imagery";
 import { useReveal } from "@/hooks/useReveal";
 
@@ -31,17 +30,14 @@ export function WorkVideography() {
     >
       <Container>
         <div ref={ref} data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Production imagery only — the stage still lives in the
+              Cinematic Frames collection above, so it isn't repeated here. */}
           <div className="lg:col-span-6 grid grid-cols-5 gap-3 md:gap-4">
-            <div className="col-span-3 relative aspect-[3/4] rounded-[12px] overflow-hidden bg-[#0A0A0A]">
-              <Image src={STAGE_PHOTO.src} alt={STAGE_PHOTO.alt} fill className="object-cover" sizes="(max-width: 1024px) 60vw, 30vw" />
+            <div className="col-span-3 relative aspect-[3/4] rounded-[12px] overflow-hidden bg-[#E8E8E8]">
+              <Image src={IMAGERY.videography.src} alt={IMAGERY.videography.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 60vw, 30vw" />
             </div>
-            <div className="col-span-2 flex flex-col gap-3 md:gap-4">
-              <div className="relative flex-1 rounded-[12px] overflow-hidden bg-[#E8E8E8]">
-                <Image src={IMAGERY.videography.src} alt={IMAGERY.videography.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 40vw, 20vw" />
-              </div>
-              <div className="relative flex-1 rounded-[12px] overflow-hidden bg-[#E8E8E8]">
-                <Image src={IMAGERY.videoEditing.src} alt={IMAGERY.videoEditing.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 40vw, 20vw" />
-              </div>
+            <div className="col-span-2 relative rounded-[12px] overflow-hidden bg-[#E8E8E8]">
+              <Image src={IMAGERY.videoEditing.src} alt={IMAGERY.videoEditing.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 40vw, 20vw" />
             </div>
           </div>
 

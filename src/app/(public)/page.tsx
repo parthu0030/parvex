@@ -3,7 +3,6 @@ import { StudioIntro } from "@/components/home/StudioIntro";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { ProjectsPreview } from "@/components/home/ProjectsPreview";
 import { AboutPreview } from "@/components/home/AboutPreview";
-import { MediaShowcase } from "@/components/home/MediaShowcase";
 import { CTASection } from "@/components/home/CTASection";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getFeaturedProjects } from "@/lib/queries/projects";
@@ -71,9 +70,10 @@ export default async function HomePage() {
       />
       <StudioIntro />
       <ServicesPreview services={serviceViews} heading={content?.servicesHeading || undefined} />
-      <ProjectsPreview projects={projectViews} heading={content?.selectedWorkHeading ?? undefined} />
+      {/* Light → dark → light rhythm: About (dark) sits between Services and
+          Work. Photography lives in the portfolio at /work#photography. */}
       <AboutPreview />
-      <MediaShowcase />
+      <ProjectsPreview projects={projectViews} heading={content?.selectedWorkHeading ?? undefined} />
       <CTASection
         headline={content?.finalCtaHeadline ?? undefined}
         ctaLabel={content?.finalCtaLabel ?? undefined}

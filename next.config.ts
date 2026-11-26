@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     root: path.resolve(process.cwd()),
   },
   images: {
+    // 75 = default grid quality; 90 = full-screen photography viewer.
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: "https",
