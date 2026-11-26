@@ -9,7 +9,7 @@ import { getFeaturedProjects } from "@/lib/queries/projects";
 import { getPublishedServices } from "@/lib/queries/services";
 import { getPageContent } from "@/lib/queries/content";
 import { prisma } from "@/lib/db/prisma";
-import { COMPANY, SITE_URL } from "@/data/company";
+import { COMPANY, CONTACT_LINKS, REPOSITORY_URL, SITE_URL } from "@/data/company";
 
 export const revalidate = 3600; // ISR fallback; Admin mutations explicitly revalidatePath() too
 
@@ -55,6 +55,14 @@ export default async function HomePage() {
           description: COMPANY.description,
           url: SITE_URL,
           email,
+          telephone: CONTACT_LINKS.phoneE164,
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "sales",
+            email,
+            telephone: CONTACT_LINKS.phoneE164,
+          },
+          sameAs: [REPOSITORY_URL],
           logo: `${SITE_URL}/assets/logos/parvex-logo-full.png`,
           image: `${SITE_URL}/assets/logos/parvex-og-image.png`,
           slogan: COMPANY.tagline,

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { FOOTER_SECTIONS } from "@/constants/navigation";
-import { COMPANY } from "@/data/company";
+import { COMPANY, CONTACT_LINKS } from "@/data/company";
 import { useRevealChildren } from "@/hooks/useReveal";
 
 export function Footer() {
@@ -31,12 +31,32 @@ export function Footer() {
               A creative technology studio designing and building websites,
               applications, automation, photography and film.
             </p>
-            <a
-              href={`mailto:${COMPANY.email}`}
-              className="link-draw w-fit text-[15px] text-white/80 hover:text-white transition-colors duration-200"
-            >
-              {COMPANY.email}
-            </a>
+            <ul className="flex flex-col gap-2.5">
+              <li>
+                <a
+                  href={CONTACT_LINKS.email}
+                  className="link-draw text-[15px] text-white/80 hover:text-white transition-colors duration-200"
+                >
+                  {COMPANY.email}
+                </a>
+              </li>
+              <li className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[15px]">
+                <a
+                  href={CONTACT_LINKS.phone}
+                  className="link-draw text-white/80 hover:text-white transition-colors duration-200 tabular-nums"
+                >
+                  {COMPANY.phone}
+                </a>
+                <a
+                  href={CONTACT_LINKS.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-draw text-[13px] text-white/50 hover:text-white transition-colors duration-200"
+                >
+                  WhatsApp
+                </a>
+              </li>
+            </ul>
           </div>
 
           {FOOTER_SECTIONS.map((section) => (

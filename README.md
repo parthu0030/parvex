@@ -5,6 +5,13 @@ Website Content, Media Library, Messages, Leads, SEO, Analytics, Users, and
 Settings — all backed by PostgreSQL via Prisma, media via Cloudinary, auth via
 Better Auth, and transactional email via Resend.
 
+- **Repository:** https://github.com/parthu0030/parvex
+- **Studio contact:** parvex3303@gmail.com · +91 79900 32648 (call or WhatsApp)
+
+Public contact details live in `src/data/company.ts` (`COMPANY`, `CONTACT_LINKS`);
+change them there and every page — footer, contact page, CTAs, structured data —
+updates together.
+
 ## Stack
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4

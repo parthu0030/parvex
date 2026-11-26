@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { COMPANY } from "@/data/company";
+import { COMPANY, CONTACT_LINKS } from "@/data/company";
 import { INQUIRY_OPTIONS } from "@/lib/validations/contact";
 import { useReveal } from "@/hooks/useReveal";
 
@@ -81,10 +81,24 @@ export function CTASection({
                   <ArrowUpRight size={18} aria-hidden="true" />
                 </span>
               </Link>
-              <p className="text-[14px] text-white/45">
+              <p className="text-[14px] text-white/45 lg:text-right leading-[1.8]">
                 Or email{" "}
                 <a href={`mailto:${contactEmail}`} className="link-draw text-white/85 hover:text-white">
                   {contactEmail}
+                </a>
+                <br />
+                Call{" "}
+                <a href={CONTACT_LINKS.phone} className="link-draw text-white/85 hover:text-white tabular-nums">
+                  {COMPANY.phone}
+                </a>{" "}
+                ·{" "}
+                <a
+                  href={CONTACT_LINKS.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-draw text-white/85 hover:text-white"
+                >
+                  WhatsApp
                 </a>
               </p>
             </div>

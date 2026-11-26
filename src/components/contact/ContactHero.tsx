@@ -1,8 +1,8 @@
 "use client";
 
-import { Mail } from "lucide-react";
+import { Mail, MessageCircle } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { COMPANY } from "@/data/company";
+import { COMPANY, CONTACT_LINKS } from "@/data/company";
 import { ACTIVE_SOCIAL_LINKS } from "@/data/social";
 import { useHeroAnimation } from "@/hooks/useHeroAnimation";
 
@@ -53,17 +53,35 @@ export function ContactHero() {
             className="lg:col-span-5 flex flex-col border-t border-[#E8E8E8]"
           >
             <a
-              href={`mailto:${COMPANY.email}`}
+              href={CONTACT_LINKS.email}
               className="group flex items-center justify-between gap-4 py-5 border-b border-[#E8E8E8]"
             >
-              <span className="flex flex-col gap-1">
+              <span className="flex flex-col gap-1 min-w-0">
                 <span className="eyebrow">Prefer email?</span>
-                <span className="link-draw w-fit text-[18px] md:text-[20px] font-medium text-[#0A0A0A] tracking-[-0.02em]">
+                <span className="link-draw w-fit text-[18px] md:text-[20px] font-medium text-[#0A0A0A] tracking-[-0.02em] break-all">
                   {COMPANY.email}
                 </span>
               </span>
-              <Mail size={18} aria-hidden="true" className="text-[#6B6B6B] group-hover:text-[#0A0A0A] transition-colors" />
+              <Mail size={18} aria-hidden="true" className="flex-shrink-0 text-[#6B6B6B] group-hover:text-[#0A0A0A] transition-colors" />
             </a>
+            <div className="flex items-center justify-between gap-4 py-5 border-b border-[#E8E8E8]">
+              <a href={CONTACT_LINKS.phone} className="group flex flex-col gap-1">
+                <span className="eyebrow">Call us</span>
+                <span className="link-draw w-fit text-[18px] md:text-[20px] font-medium text-[#0A0A0A] tracking-[-0.02em] tabular-nums">
+                  {COMPANY.phone}
+                </span>
+              </a>
+              <a
+                href={CONTACT_LINKS.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Message Parvex on WhatsApp at ${COMPANY.phone}`}
+                className="inline-flex flex-shrink-0 items-center gap-2 rounded-full border border-[#0A0A0A] px-4 py-2 text-[13px] font-medium text-[#0A0A0A] hover:bg-[#0A0A0A] hover:text-white transition-colors duration-300"
+              >
+                <MessageCircle size={15} aria-hidden="true" />
+                WhatsApp
+              </a>
+            </div>
             <dl className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1">
               {DETAILS.map((d) => (
                 <div key={d.label} className="flex sm:flex-col lg:flex-row justify-between gap-1 sm:gap-1.5 lg:gap-4 py-4 border-b border-[#E8E8E8]">

@@ -128,11 +128,15 @@ const raw = {
   try {
     const settings = await prisma.setting.findUnique({ where: { id: "singleton" } });
     const recipient = settings?.contactEmail || settings?.primaryEmail || process.env.CONTACT_FALLBACK_EMAIL || "";
-    const fromDomain = recipient.split("@")[1] || "parvex.in";
+    // The sender must be on a domain verified in Resend. Deriving it from the
+    // recipient breaks for Gmail and similar inboxes (hello@gmail.com is never
+    // verifiable), so use RESEND_FROM_EMAIL, falling back to Resend's shared
+    // test sender.
+    const from = process.env.RESEND_FROM_EMAIL || "Parvex Contact <onboarding@resend.dev>";
 
     if (recipient) {
       await resend.emails.send({
-        from: `Parvex Contact <hello@${fromDomain}>`,
+        from,
         to: recipient,
         replyTo: email,
         subject: `New enquiry — ${projectType} — ${name}`,
