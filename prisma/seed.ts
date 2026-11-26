@@ -197,7 +197,9 @@ async function seedSettings() {
       companyName: COMPANY.name,
       tagline: COMPANY.tagline,
       primaryEmail: COMPANY.email,
-      contactEmail: COMPANY.email,
+      // Private inbox for contact-form enquiries. Kept out of the (public)
+      // repo: set CONTACT_FALLBACK_EMAIL in the environment before seeding.
+      contactEmail: process.env.CONTACT_FALLBACK_EMAIL || COMPANY.email,
       availabilityStatus: "Available for new projects",
       responseTime: "Within 24 hours",
       linkedin: COMPANY.socialLinks.find((s) => s.platform.toLowerCase() === "linkedin")?.href,
