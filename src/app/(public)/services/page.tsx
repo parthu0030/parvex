@@ -3,46 +3,28 @@ import { ServicesHero } from "@/components/services/ServicesHero";
 import { ServicesList } from "@/components/services/ServicesList";
 import { WhyChooseParvex } from "@/components/services/WhyChooseParvex";
 import { ServicesProcess } from "@/components/services/ServicesProcess";
+import { ServicesFAQ } from "@/components/services/ServicesFAQ";
 import { CTASection } from "@/components/home/CTASection";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getPublishedServices } from "@/lib/queries/services";
 import { getPageContent } from "@/lib/queries/content";
+import { buildPageMetadata } from "@/lib/seo";
+import { FAQ } from "@/data/faq";
+import { SITE_URL } from "@/data/company";
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getPageContent("SERVICES");
-
-  return {
-    title: content?.metaTitle ?? "Services — Parvex",
+  return buildPageMetadata({
+    title: content?.metaTitle ?? "Services",
     description:
       content?.metaDescription ??
-      "Web development, app development, photography, and videography from Parvex — a Digital Experience Studio that builds products and brands worth trusting.",
-    keywords: [
-      "Parvex services",
-      "web development studio",
-      "app development studio",
-      "photography services",
-      "videography services",
-      "digital experience studio",
-    ],
-    openGraph: {
-      type: "website",
-      locale: "en_IN",
-      url: "https://parvex.in/services",
-      siteName: "Parvex",
-      title: content?.metaTitle ?? "Services — Parvex",
-      description: content?.metaDescription ?? "Web development, app development, photography, and videography — engineering and creative craft under one roof.",
-      images: [{ url: "/assets/logos/parvex-og-image.png", width: 1200, height: 630, alt: "Parvex — Beyond Excellence" }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: content?.metaTitle ?? "Services — Parvex",
-      description: content?.metaDescription ?? "Web development, app development, photography, and videography — engineering and creative craft under one roof.",
-      images: ["/assets/logos/parvex-og-image.png"],
-    },
-    alternates: { canonical: content?.canonicalUrl ?? "https://parvex.in/services" },
-    robots: content?.noIndex ? { index: false, follow: false } : undefined,
-  };
+      "Website design and development, web applications, UI/UX, branding, photography, videography, video editing and AI automation — from one creative technology studio.",
+    path: "/services",
+    canonical: content?.canonicalUrl,
+    noIndex: content?.noIndex,
+  });
 }
 
 export default async function ServicesPage() {
@@ -56,14 +38,44 @@ export default async function ServicesPage() {
     deliverables: s.deliverables,
     outcome: s.outcome,
     imageUrl: s.media?.url ?? "",
+    imageAlt: s.media?.altText ?? null,
   }));
 
   return (
     <>
-      <ServicesHero />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          itemListElement: services.map((s, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            item: {
+              "@type": "Service",
+              name: s.title,
+              description: s.description,
+              url: `${SITE_URL}/services#${s.slug}`,
+              provider: { "@type": "Organization", name: "Parvex", url: SITE_URL },
+            },
+          })),
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQ.map((f) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: { "@type": "Answer", text: f.answer },
+          })),
+        }}
+      />
+      <ServicesHero services={serviceViews.map((s) => ({ slug: s.slug, title: s.title }))} />
       <ServicesList services={serviceViews} />
       <WhyChooseParvex />
       <ServicesProcess />
+      <ServicesFAQ />
       <CTASection
         headline={content?.finalCtaHeadline ?? undefined}
         ctaLabel={content?.finalCtaLabel ?? undefined}

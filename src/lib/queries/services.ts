@@ -2,14 +2,8 @@ import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { SERVICES as STATIC_SERVICES } from "@/data/services";
 
-const SERVICE_IMAGE_BY_SLUG: Record<string, string> = {
-  "web-development": "/assets/services/web-development.png",
-  "app-development": "/assets/services/app-development.png",
-  "ai-products": "/assets/services/web-development.png",
-  photography: "/assets/services/photography.png",
-  videography: "/assets/services/videography.png",
-};
-
+// The static fallback has no uploaded media; components resolve imagery via
+// getServicePresentation(slug) in src/data/services.ts.
 function staticServices() {
   return STATIC_SERVICES.map((service, order) => ({
     ...service,
@@ -19,10 +13,7 @@ function staticServices() {
     outcome: service.outcome ?? null,
     order,
     published: true,
-    media: {
-      url: SERVICE_IMAGE_BY_SLUG[service.slug ?? service.id] ?? "/assets/services/web-development.png",
-      altText: `${service.title} service visualization`,
-    },
+    media: null as { url: string; altText: string | null } | null,
   }));
 }
 

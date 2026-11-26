@@ -25,4 +25,16 @@ export const FAQ: FAQItem[] = [
     answer:
       "Yes — we offer post-launch support and maintenance retainers for projects that need continued iteration after the initial build.",
   },
+  {
+    id: "faq-single-service",
+    question: "Can we hire you for just one service?",
+    answer:
+      "Of course. Many projects are a single website, a shoot or an edit. Combining services simply means fewer hand-offs — it's never a requirement.",
+  },
+  {
+    id: "faq-start",
+    question: "What do you need from us to get started?",
+    answer:
+      "A short description of what you want to achieve, any deadline you're working towards and a rough budget if you have one. The contact form takes about two minutes; we reply within one working day.",
+  },
 ];

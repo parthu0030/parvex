@@ -439,22 +439,53 @@
   }
 }
 
-/* ─── Case Study + Work page utilities ────────────────────────────────────── */
+/* ─── Editorial utilities ───────────────────────────────────────────────── */
 
-/* Image hover zoom — subtle scale on parent hover, GPU-composited */
-.image-hover-zoom img {
-  transition: transform var(--duration-slow) var(--ease-out-quart);
-  will-change: transform;
+/* Monochrome treatment for illustrative (non-Parvex) imagery so every photo
+   on the site sits in the same black-and-white family as the studio's own
+   work. A slight contrast lift keeps greys from looking flat. */
+.img-mono {
+  filter: grayscale(1) contrast(1.06);
 }
-.image-hover-zoom:hover img {
-  transform: scale(1.025);
+
+/* Small uppercase label used above section headings. */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+}
+
+/* Underline that draws in from the left on hover/focus. */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size var(--duration-base) var(--ease-out-expo);
+}
+.link-draw:hover,
+.link-draw:focus-visible,
+.group:hover .link-draw,
+.group:focus-visible .link-draw {
+  background-size: 100% 1px;
+}
+
+/* Service index: floating preview that follows the cursor (desktop only). */
+.service-preview {
+  transition:
+    opacity 260ms ease-out,
+    transform 420ms var(--ease-out-expo);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .image-hover-zoom img {
+  .service-preview {
     transition: none;
   }
-  .image-hover-zoom:hover img {
-    transform: none;
-  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

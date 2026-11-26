@@ -1,11 +1,18 @@
-import type { CaseStudyProject, Project } from "@/types";
+import type { CaseStudyProject } from "@/types";
+import { IMAGERY } from "./imagery";
+import { getPhoto } from "./photography";
 
 /**
- * PARVEX — Master project data store.
+ * PARVEX — master project data store (static fallback + CMS seed source).
  *
- * Adding a new project = adding one object to this array.
- * The Work page, Work grid, and every case study page auto-generate from this data.
- * No UI files need to be touched.
+ * Content rules:
+ *   - Describe what was built and why, in plain language.
+ *   - No invented metrics, client names, interviews or testimonials. If a
+ *     result hasn't been measured, it doesn't go on the site.
+ *   - `results` holds product highlights (what the build does), not claimed
+ *     business outcomes, unless those outcomes are verified.
+ *   - Gallery images must be real project visuals or Parvex's own work —
+ *     never stock photos captioned as screenshots.
  */
 export const PROJECTS: CaseStudyProject[] = [
   {
@@ -13,28 +20,26 @@ export const PROJECTS: CaseStudyProject[] = [
     title: "AuditGPT",
     category: "AI Product",
     year: "2024",
-    client: "Internal / SaaS",
+    client: "Internal product",
     status: "Live",
     duration: "14 weeks",
     description:
-      "An AI-powered compliance auditing tool that reduces manual review time by 80%. Built for financial teams who cannot afford errors.",
-    coverImage:
-      "/assets/projects/auditgpt.png",
-    coverImageAlt: "AuditGPT — AI compliance auditing dashboard",
-    thumbnail:
-      "/assets/projects/auditgpt.png",
-    thumbnailAlt: "AuditGPT project thumbnail",
+      "An AI-assisted auditing workspace that reads large document sets, flags inconsistencies and explains every flag so reviewers stay in control.",
+    coverImage: "/assets/projects/auditgpt.png",
+    coverImageAlt: "AuditGPT compliance overview dashboard showing AI analysis flags and financial trends",
+    thumbnail: "/assets/projects/auditgpt.png",
+    thumbnailAlt: "AuditGPT AI audit log dashboard",
     services: ["Product Strategy", "UI/UX Design", "Web Development", "AI Integration"],
     challenge:
-      "Financial teams were spending entire weeks manually cross-referencing regulatory documents for compliance gaps — a process that was slow, repetitive, and deeply prone to human error at scale. As document volumes grew, the problem compounded: more reviewers, more time, but still no guarantee of complete coverage. The team needed a fundamentally different approach, not just a faster version of the same manual process.",
+      "Reviewing financial and regulatory documents by hand is slow, repetitive and easy to get wrong at scale. Every additional document adds review time, and there is rarely a clear record of why something was — or wasn't — flagged.",
     solution:
-      "We built an AI auditing layer that reads, indexes, and flags inconsistencies across large document sets in minutes. The system uses large language models to understand context across hundreds of pages simultaneously, surfacing only the items that need human judgment. The interface was designed around trust — every flag is explained, traceable, and can be overridden with a reason. The goal was confidence, not blind automation.",
+      "AuditGPT adds an AI analysis layer that indexes documents, compares them against a defined rule set and surfaces only the items that need human judgement. Each flag carries its reasoning and source so a reviewer can accept, reject or escalate it with confidence. The goal is a faster review, not blind automation.",
     research:
-      "Before writing a line of code, we spent three weeks embedded with compliance officers at two financial firms. We mapped their existing review workflows step by step, identifying the exact moments where errors crept in and where reviewers felt most uncertain. We found that the core anxiety was not speed but accountability — reviewers feared missing something and being blamed for it. That insight shaped everything: the AI would not replace the reviewer but give them a defensible paper trail for every decision they made.",
+      "We designed around one principle: the reviewer stays accountable, so the software must make every suggestion explainable. That shaped the interface — flags sit beside the source text, reasoning is always visible, and nothing is applied without a human decision.",
     development:
-      "We structured development in three layers. First, the ingestion pipeline: PDF parsing, OCR fallback for scanned documents, and a chunked embedding store using pgvector. Second, the analysis layer: a fine-tuned prompt chain that compares document sections against a curated rulebook, returning structured JSON with confidence scores and source citations. Third, the review interface: a split-panel editor where flagged items appear inline with their rationale, and reviewers can accept, reject, or escalate. Each layer was shipped as an independent service so they could be tested and scaled separately.",
+      "The build is split into three layers. An ingestion pipeline parses PDFs and stores chunked embeddings for retrieval. An analysis layer runs structured prompts against a rulebook and returns JSON with confidence scores and citations. A review interface presents flagged items inline with their rationale. Each layer is separated so it can be tested and improved independently.",
     technology: [
-      { name: "Next.js 15", category: "Frontend" },
+      { name: "Next.js", category: "Frontend" },
       { name: "TypeScript", category: "Frontend" },
       { name: "Tailwind CSS", category: "Frontend" },
       { name: "Node.js", category: "Backend" },
@@ -42,47 +47,12 @@ export const PROJECTS: CaseStudyProject[] = [
       { name: "pgvector", category: "Database" },
       { name: "Prisma", category: "ORM" },
       { name: "OpenAI API", category: "AI" },
-      { name: "Cloudinary", category: "Media" },
-      { name: "Vercel", category: "Deployment" },
     ],
-    gallery: [
-      {
-        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=85&auto=format&fit=crop",
-        alt: "AuditGPT dashboard overview",
-        aspect: "landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&q=85&auto=format&fit=crop",
-        alt: "Document analysis interface",
-        aspect: "portrait",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=1200&q=85&auto=format&fit=crop",
-        alt: "Compliance flag review panel",
-        aspect: "landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=85&auto=format&fit=crop",
-        alt: "Data visualization and reporting",
-        aspect: "square",
-      },
-    ],
+    gallery: [],
     results: [
-      {
-        metric: "Review time",
-        value: "−80%",
-        description: "Manual review time dropped by 80%, allowing teams to handle significantly more volume.",
-      },
-      {
-        metric: "Coverage",
-        value: "100%",
-        description: "Every document section is checked against every rule — no items fall through the gaps.",
-      },
-      {
-        metric: "Confidence",
-        value: "High",
-        description: "Every flag is explained and traceable, giving reviewers a defensible audit trail.",
-      },
+      { metric: "Explainable", value: "Every flag cited", description: "Each finding links back to the exact source passage and the rule it was checked against." },
+      { metric: "Human-in-the-loop", value: "Review, not replace", description: "Reviewers accept, reject or escalate every item — nothing is auto-applied." },
+      { metric: "Modular", value: "Three layers", description: "Ingestion, analysis and review are separated so each can evolve on its own." },
     ],
     nextProject: "resume-analyzer",
   },
@@ -92,26 +62,24 @@ export const PROJECTS: CaseStudyProject[] = [
     title: "Resume Analyzer",
     category: "AI Product",
     year: "2024",
-    client: "HR Tech / SaaS",
+    client: "Internal product",
     status: "Live",
     duration: "10 weeks",
     description:
-      "Intelligent screening at scale. Matches candidates to roles using contextual understanding, not just keywords.",
-    coverImage:
-      "/assets/projects/resume-analyzer.png",
-    coverImageAlt: "Resume Analyzer — AI recruitment screening interface",
-    thumbnail:
-      "/assets/projects/resume-analyzer.png",
-    thumbnailAlt: "Resume Analyzer project thumbnail",
+      "Contextual candidate screening that matches resumes to roles by meaning, not keywords — and explains every ranking.",
+    coverImage: IMAGERY.analytics.src,
+    coverImageAlt: "Analytics dashboard on a laptop, representing candidate ranking and fit scores",
+    thumbnail: IMAGERY.analytics.src,
+    thumbnailAlt: "Resume Analyzer project cover",
     services: ["Product Strategy", "UI/UX Design", "Web Development", "AI Integration"],
     challenge:
-      "Keyword-based applicant tracking systems were systematically filtering out strong candidates simply because their resumes used different phrasing than the job description. A senior engineer who wrote 'built distributed systems' would be rejected if the job posting said 'microservices architecture.' Recruiters knew this was happening but had no alternative — manually reviewing hundreds of applications was not scalable.",
+      "Keyword-based applicant tracking filters out strong candidates who describe the same experience in different words. 'Built distributed systems' and 'microservices architecture' mean much the same thing — a keyword filter treats them as unrelated.",
     solution:
-      "We designed a contextual matching engine that understands skills and experience semantically, not syntactically. The system embeds both the job description and each resume into the same vector space, then ranks candidates by genuine conceptual fit rather than exact string overlap. Recruiters see a ranked list with clear explanations of why each candidate was ranked where they were — making the process transparent and auditable.",
+      "Resume Analyzer embeds job descriptions and resumes in the same semantic space and ranks candidates by conceptual fit. Recruiters see a ranked list with a plain-language explanation for each score, keeping the process transparent and reviewable.",
     research:
-      "We interviewed eight recruiters across technology, finance, and healthcare to understand how screening decisions were actually being made. The consistent finding: recruiters trusted their gut more than their ATS, often manually reviewing candidates the system had filtered out when something felt off. The product opportunity was not to automate the recruiter's judgment but to make their instincts scalable — giving them a tool that surfaced the same candidates they would have found manually, just faster.",
+      "The product is built to support a recruiter's judgement rather than replace it. Rankings are a starting point; explanations make it easy to see why a candidate surfaced and to disagree when the model is wrong.",
     development:
-      "The core of the system is a two-stage pipeline. In stage one, both the job description and each resume are processed through a shared embedding model, producing dense vectors that capture semantic meaning. In stage two, cosine similarity scores are computed across all candidates and normalized into a 0–100 fit score. A secondary LLM pass generates the natural-language explanations that accompany each score. The frontend is a clean list view with expandable candidate cards, built to handle batches of up to 500 resumes without pagination.",
+      "A two-stage pipeline: resumes and job descriptions are converted to embeddings and compared with cosine similarity, normalised into a 0–100 fit score. A second language-model pass writes the explanation shown with each score. The frontend is a fast list view with expandable candidate cards designed for large batches.",
     technology: [
       { name: "React", category: "Frontend" },
       { name: "TypeScript", category: "Frontend" },
@@ -120,41 +88,12 @@ export const PROJECTS: CaseStudyProject[] = [
       { name: "PostgreSQL", category: "Database" },
       { name: "OpenAI API", category: "AI" },
       { name: "Pinecone", category: "Vector DB" },
-      { name: "Vercel", category: "Deployment" },
     ],
-    gallery: [
-      {
-        src: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1200&q=85&auto=format&fit=crop",
-        alt: "Candidate ranking dashboard",
-        aspect: "landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=85&auto=format&fit=crop",
-        alt: "Resume analysis detail view",
-        aspect: "portrait",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=85&auto=format&fit=crop",
-        alt: "Job description matching interface",
-        aspect: "landscape",
-      },
-    ],
+    gallery: [],
     results: [
-      {
-        metric: "Screening time",
-        value: "−70%",
-        description: "Recruiting teams cut initial screening time significantly across all roles.",
-      },
-      {
-        metric: "Candidate quality",
-        value: "+45%",
-        description: "More qualified candidates surfaced per role compared to keyword-based filtering.",
-      },
-      {
-        metric: "False negatives",
-        value: "Near zero",
-        description: "Strong candidates are no longer filtered out due to phrasing differences.",
-      },
+      { metric: "Semantic", value: "Meaning over keywords", description: "Candidates are matched on what their experience means, not the exact words used." },
+      { metric: "Transparent", value: "Explained scores", description: "Every fit score ships with a short, readable rationale." },
+      { metric: "Batch-ready", value: "Built for volume", description: "Designed to review large applicant pools in one pass." },
     ],
     nextProject: "movie-ticket",
   },
@@ -162,71 +101,40 @@ export const PROJECTS: CaseStudyProject[] = [
   {
     slug: "movie-ticket",
     title: "Movie Ticket Booking",
-    category: "Web Development",
+    category: "Web Application",
     year: "2023",
-    client: "Entertainment / B2C",
+    client: "Internal product",
     status: "Live",
     duration: "8 weeks",
     description:
-      "A seamless seat-selection and ticketing experience. Zero friction from browse to booking confirmation.",
-    coverImage:
-      "/assets/projects/movie-ticket.png",
-    coverImageAlt: "Movie Ticket Booking — seat selection interface",
-    thumbnail:
-      "/assets/projects/movie-ticket.png",
-    thumbnailAlt: "Movie Ticket Booking project thumbnail",
+      "A booking flow rebuilt around one fast seat-map interaction — from showtime to confirmation without the usual detours.",
+    coverImage: "/assets/projects/movie-ticket-mono.jpg",
+    coverImageAlt: "Rows of cinema seats facing the screen",
+    thumbnail: "/assets/projects/movie-ticket-mono.jpg",
+    thumbnailAlt: "Movie Ticket Booking project cover",
     services: ["UI/UX Design", "Web Development", "Payment Integration"],
     challenge:
-      "Existing booking flows buried seat selection behind multiple registration screens and redundant confirmation steps, causing significant drop-off right before payment — the moment that mattered most. On release days for high-demand films, the combination of poor UX and slow server responses meant many customers gave up and went elsewhere. The business was losing revenue not from lack of demand but from a broken purchase experience.",
+      "Typical booking flows hide seat selection behind registration screens and repeated confirmations. The friction lands right before payment — exactly where it costs the most — and gets worse on busy release days.",
     solution:
-      "We rebuilt the entire booking flow around a single, fast seat-map interaction. Date selection, showtime, and seat availability are all visible on one screen. The checkout is collapsed into as few steps as the experience allows — for returning users, it is a single click. Real-time availability updates prevent the frustration of selecting a seat that is already taken. The result is a flow that respects the user's time and removes every unnecessary decision.",
+      "Date, showtime and live seat availability sit on a single screen. Checkout is reduced to the fewest steps the flow allows, and real-time updates prevent the frustration of choosing a seat someone else has just taken.",
     research:
-      "We ran usability sessions with twelve frequent moviegoers, recording their attempts to book tickets on three competing platforms. The session data was unambiguous: users abandoned bookings when they encountered unexpected registration requirements mid-flow, when seat maps were slow to load, or when the number of steps to checkout exceeded five. We used these findings to define a strict constraint for the new experience: every user should be able to go from landing to confirmation in under two minutes.",
+      "We set one constraint for the experience: a moviegoer should be able to go from landing to confirmed booking in a couple of minutes, without creating an account first. Every screen and step was measured against it.",
     development:
-      "The seat map is rendered as an SVG component with real-time WebSocket updates, ensuring availability data is always current. Seat status changes are broadcast server-side and applied client-side without a full page reload. Payment is handled through Stripe Elements, which loads asynchronously so it never blocks the seat selection experience. The backend is a Next.js API layer backed by PostgreSQL with optimistic locking on seat reservations to handle concurrent requests during high-traffic release windows.",
+      "The seat map is an SVG component kept current through WebSocket updates. Payment loads asynchronously so it never blocks seat selection, and reservations use optimistic locking in PostgreSQL to handle concurrent requests for the same seat.",
     technology: [
-      { name: "Next.js 15", category: "Frontend" },
+      { name: "Next.js", category: "Frontend" },
       { name: "TypeScript", category: "Frontend" },
       { name: "Tailwind CSS", category: "Frontend" },
       { name: "PostgreSQL", category: "Database" },
       { name: "Prisma", category: "ORM" },
       { name: "Stripe", category: "Payments" },
       { name: "WebSockets", category: "Real-time" },
-      { name: "Vercel", category: "Deployment" },
     ],
-    gallery: [
-      {
-        src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&q=85&auto=format&fit=crop",
-        alt: "Movie browsing and showtime selection",
-        aspect: "landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&q=85&auto=format&fit=crop",
-        alt: "Seat map interface",
-        aspect: "portrait",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=1200&q=85&auto=format&fit=crop",
-        alt: "Checkout and payment flow",
-        aspect: "landscape",
-      },
-    ],
+    gallery: [],
     results: [
-      {
-        metric: "Time to book",
-        value: "< 2 min",
-        description: "Average time from landing to confirmation, down from 8+ minutes on the old flow.",
-      },
-      {
-        metric: "Drop-off rate",
-        value: "−60%",
-        description: "Booking abandonment dropped significantly after the redesigned flow launched.",
-      },
-      {
-        metric: "Peak load",
-        value: "10k req/min",
-        description: "The system handles high-traffic release days without degradation.",
-      },
+      { metric: "One screen", value: "Showtime to seat", description: "Date, time and availability are chosen together instead of across several pages." },
+      { metric: "Real-time", value: "Live availability", description: "Seat status updates instantly to avoid double selection." },
+      { metric: "Safe checkout", value: "Locked reservations", description: "Concurrent requests for the same seat are resolved server-side." },
     ],
     nextProject: "photography-showcase",
   },
@@ -236,72 +144,40 @@ export const PROJECTS: CaseStudyProject[] = [
     title: "Photography Showcase",
     category: "Creative / Photography",
     year: "2024",
-    client: "Creative Studio",
+    client: "Parvex studio",
     status: "Live",
     duration: "6 weeks",
     description:
-      "An editorial photography portfolio built to communicate visual quality without competing with it.",
-    coverImage:
-      "/assets/projects/photography-showcase.png",
-    coverImageAlt: "Photography Showcase — editorial portfolio",
-    thumbnail:
-      "/assets/projects/photography-showcase.png",
-    thumbnailAlt: "Photography Showcase project thumbnail",
-    services: ["Creative Direction", "UI/UX Design", "Web Development"],
+      "An editorial portfolio system for Parvex's own photography — designed so the images lead and the interface steps back.",
+    coverImage: getPhoto("landscape-peak").src,
+    coverImageAlt: getPhoto("landscape-peak").alt,
+    thumbnail: getPhoto("landscape-peak").src,
+    thumbnailAlt: "Photography Showcase cover — a lone snow peak above cloud",
+    services: ["Creative Direction", "Photography", "UI/UX Design", "Web Development"],
     challenge:
-      "Most photography portfolios fall into one of two traps: either they are so minimal that the photography has no context, or they are so designed that the UI competes with the images themselves. The client had a strong body of work spanning portraiture, landscape, and commercial photography — but no way to present it that felt as considered as the photographs themselves.",
+      "Photography portfolios usually fail in one of two ways: so bare the images lose context, or so designed that the interface competes with the work. Our own landscape and street series needed a home that felt as considered as the photographs.",
     solution:
-      "We designed a layout system that treats whitespace as the primary design element. Every gallery view gives images room to breathe. Navigation is invisible until needed. The typography is restrained to the point of near-absence. The result is a portfolio where the first thing a visitor notices is always the photography — not the website.",
+      "A layout system that treats whitespace as the main design element. Series are grouped editorially, navigation stays quiet until it's needed and typography is kept to a minimum. The first thing a visitor notices is always the photograph.",
     research:
-      "We audited forty photography portfolio websites, categorizing each by how they balanced UI presence against image presence. The correlation was striking: the portfolios that felt most premium were consistently the ones where the UI was least visible. We also interviewed five photography clients on what they noticed first when evaluating a photographer's work online. The unanimous answer: the quality and cohesion of the images. The website's job, they said, was to stay out of the way.",
+      "We curated before we designed: cutting duplicates and near-misses, sequencing each series for rhythm, and committing to monochrome so landscapes and street portraits read as one body of work.",
     development:
-      "The gallery is built on a custom masonry layout that adapts to image aspect ratios rather than forcing all images into a rigid grid. Images are loaded progressively — a low-resolution blur placeholder appears immediately, then the full-resolution image fades in once loaded. A lightbox mode allows full-screen viewing with keyboard navigation. All images are served through Cloudinary with automatic format detection (WebP for supporting browsers, JPEG fallback) and responsive srcsets at five breakpoints.",
+      "Images are exported at web-appropriate sizes, served responsively through Next.js image optimisation and lazy-loaded below the fold. A full-screen viewer supports keyboard navigation for anyone who wants to look closer.",
     technology: [
-      { name: "Next.js 15", category: "Frontend" },
+      { name: "Next.js", category: "Frontend" },
       { name: "TypeScript", category: "Frontend" },
       { name: "Tailwind CSS", category: "Frontend" },
-      { name: "Cloudinary", category: "Media" },
-      { name: "Framer Motion", category: "Animation" },
-      { name: "Vercel", category: "Deployment" },
+      { name: "Next/Image", category: "Media" },
     ],
     gallery: [
-      {
-        src: "https://images.unsplash.com/photo-1500051638674-ff996a0ec29e?w=1200&q=85&auto=format&fit=crop",
-        alt: "Portrait photography series",
-        aspect: "landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=85&auto=format&fit=crop",
-        alt: "Landscape photography collection",
-        aspect: "portrait",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?w=1200&q=85&auto=format&fit=crop",
-        alt: "Commercial photography work",
-        aspect: "landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=85&auto=format&fit=crop",
-        alt: "Gallery layout system",
-        aspect: "square",
-      },
+      { src: getPhoto("landscape-range").src, alt: getPhoto("landscape-range").alt, aspect: "landscape" },
+      { src: getPhoto("street-sculptor").src, alt: getPhoto("street-sculptor").alt, aspect: "portrait" },
+      { src: getPhoto("landscape-observatory").src, alt: getPhoto("landscape-observatory").alt, aspect: "portrait" },
+      { src: getPhoto("street-mother").src, alt: getPhoto("street-mother").alt, aspect: "portrait" },
     ],
     results: [
-      {
-        metric: "Engagement",
-        value: "+120%",
-        description: "Average session time doubled after launch compared to the previous portfolio.",
-      },
-      {
-        metric: "Inquiries",
-        value: "+85%",
-        description: "Client inquiry volume increased significantly in the first month post-launch.",
-      },
-      {
-        metric: "Load time",
-        value: "< 1.2s",
-        description: "LCP under 1.2 seconds despite serving large, high-resolution images.",
-      },
+      { metric: "Curated", value: "Two series", description: "Landscape and Street, sequenced as a single monochrome body of work." },
+      { metric: "Lightweight", value: "Web-sized exports", description: "Camera originals are never sent to visitors." },
+      { metric: "Accessible", value: "Keyboard viewer", description: "Full-screen viewing with arrow-key navigation and descriptive alt text." },
     ],
     nextProject: "videography-showcase",
   },
@@ -311,129 +187,48 @@ export const PROJECTS: CaseStudyProject[] = [
     title: "Videography Showcase",
     category: "Creative / Videography",
     year: "2024",
-    client: "Creative Studio",
-    status: "Live",
-    duration: "7 weeks",
+    client: "Parvex studio",
+    status: "Concept",
+    duration: "In development",
     description:
-      "A video portfolio that loads instantly, plays smoothly, and communicates craft before a single frame finishes.",
-    coverImage:
-      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1600&q=90&auto=format&fit=crop",
-    coverImageAlt: "Videography Showcase — video portfolio platform",
-    thumbnail:
-      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&q=85&auto=format&fit=crop",
-    thumbnailAlt: "Videography Showcase project thumbnail",
+      "A video portfolio concept built to load instantly and present film work without third-party players getting in the way.",
+    coverImage: IMAGERY.videography.src,
+    coverImageAlt: IMAGERY.videography.alt,
+    thumbnail: IMAGERY.videography.src,
+    thumbnailAlt: "Videography Showcase concept cover — a film slate on set",
     services: ["Creative Direction", "UI/UX Design", "Web Development", "Video Optimization"],
     challenge:
-      "Video portfolios are notoriously difficult to get right on the web. Load times are slow, autoplay is unreliable across browsers, and embedding third-party players introduces visual inconsistency and tracking concerns. The client needed a portfolio that communicated the quality of their video work without making visitors wait, and without the visual interruption of a YouTube or Vimeo player appearing mid-page.",
+      "Video portfolios are hard to get right on the web: heavy files, unreliable autoplay and embedded players that break the visual language of the site.",
     solution:
-      "We built a custom video presentation system using optimized preview clips that autoplay silently on hover, with a full-screen modal player that launches on click. Preview clips are short (8–12 seconds), heavily compressed WebM files that load in under a second even on mobile connections. The full player uses the browser's native video element with a custom UI layer, eliminating the need for third-party embeds entirely.",
-    research:
-      "We tested video loading behavior across six devices and four connection speeds to establish what viewers actually tolerated before abandoning. The finding: on mobile 4G, users gave videos approximately 3 seconds to begin playing before scrolling past. On desktop, the threshold was slightly higher but not dramatically so. We used these numbers to define hard performance budgets for every video on the site, and built the encoding pipeline around meeting those budgets at acceptable quality.",
+      "The concept uses short, silent preview loops on hover and a native full-screen player on click — no third-party embeds, no tracking scripts, and a consistent interface from first frame to last.",
+    research: "",
     development:
-      "The encoding pipeline uses FFmpeg to produce three video variants for each project: a preview clip (WebM, ~200KB), a standard-quality full version (MP4 + WebM, ~15MB), and a high-quality full version (~60MB) served only when the connection supports it. Cloudinary handles hosting and CDN delivery. The custom player component tracks viewing progress, supports keyboard shortcuts, and handles the edge cases that native controls often miss — particularly on iOS where autoplay behavior differs from every other platform.",
+      "Each film is encoded into a lightweight preview loop plus standard and high-quality versions, delivered through a media CDN. The player uses the browser's native video element with a custom control layer and handles iOS playback rules explicitly.",
     technology: [
-      { name: "Next.js 15", category: "Frontend" },
+      { name: "Next.js", category: "Frontend" },
       { name: "TypeScript", category: "Frontend" },
-      { name: "Tailwind CSS", category: "Frontend" },
       { name: "Cloudinary", category: "Media" },
       { name: "FFmpeg", category: "Video Processing" },
-      { name: "Framer Motion", category: "Animation" },
-      { name: "Vercel", category: "Deployment" },
     ],
-    gallery: [
-      {
-        src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1200&q=85&auto=format&fit=crop",
-        alt: "Video production showcase",
-        aspect: "landscape",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1515405295579-ba7b45403062?w=800&q=85&auto=format&fit=crop",
-        alt: "Behind the scenes footage",
-        aspect: "portrait",
-      },
-      {
-        src: "https://images.unsplash.com/photo-1603850096583-cf1a89ca6889?w=1200&q=85&auto=format&fit=crop",
-        alt: "Custom video player interface",
-        aspect: "landscape",
-      },
-    ],
-    results: [
-      {
-        metric: "Preview load",
-        value: "< 1s",
-        description: "Preview clips load in under one second on 4G connections across all devices.",
-      },
-      {
-        metric: "Completion rate",
-        value: "78%",
-        description: "78% of visitors who open a full video watch it to completion.",
-      },
-      {
-        metric: "Third-party scripts",
-        value: "Zero",
-        description: "No external embeds. No tracking pixels. No visual inconsistency.",
-      },
-    ],
+    gallery: [],
+    results: [],
     nextProject: "auditgpt",
   },
 ];
 
-/**
- * Get a single project by slug.
- * Returns undefined if not found — caller should handle 404.
- */
+/** Get a single project by slug. Returns undefined if not found. */
 export function getProjectBySlug(slug: string): CaseStudyProject | undefined {
   return PROJECTS.find((p) => p.slug === slug);
 }
 
-/**
- * Get the next project in the sequence.
- */
+/** Get the next project in the sequence. */
 export function getNextProject(currentSlug: string): CaseStudyProject | undefined {
   const current = getProjectBySlug(currentSlug);
   if (!current) return undefined;
   return getProjectBySlug(current.nextProject);
 }
 
-/**
- * Get all project slugs — used for generateStaticParams.
- */
+/** All project slugs — used for generateStaticParams. */
 export function getAllProjectSlugs(): string[] {
   return PROJECTS.map((p) => p.slug);
 }
-
-/**
- * Derive the lightweight "Project" card shape (used by the homepage and
- * FeaturedWork) from the single source of truth above, instead of keeping a
- * second, manually-duplicated content array in sync by hand.
- *
- * `spans` lets callers control the asymmetric grid layout without baking
- * layout concerns into the content model itself.
- */
-const FEATURED_SLUGS = ["auditgpt", "resume-analyzer", "movie-ticket", "photography-showcase"];
-const FEATURED_SPANS: Project["span"][] = ["large", "small", "small", "large"];
-
-export function getFeaturedProjects(): Project[] {
-  return FEATURED_SLUGS.map((slug, index) => {
-    const project = getProjectBySlug(slug);
-    if (!project) {
-      throw new Error(`getFeaturedProjects: no project found for slug "${slug}"`);
-    }
-    return {
-      id: project.slug,
-      category: project.category,
-      title: project.title,
-      description: project.description,
-      imageSrc: project.coverImage,
-      imageAlt: project.coverImageAlt,
-      span: FEATURED_SPANS[index],
-      technologies: project.technology.map((t) => t.name),
-      challenge: project.challenge,
-      solution: project.solution,
-      outcome: project.results[0]?.description ?? project.solution,
-    };
-  });
-}
-
-/** Backward-compatible eagerly-evaluated export for simple call sites. */
-export const FEATURED_PROJECTS: Project[] = getFeaturedProjects();

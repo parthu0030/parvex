@@ -35,12 +35,12 @@ function LargeOptionButton({
       onClick={onClick}
       aria-pressed={selected}
       className={cn(
-        "w-full text-center rounded-full border-2 px-6 py-4 text-[16px] md:text-[18px] font-medium tracking-wide",
+        "w-full text-center rounded-full border px-6 py-3.5 md:py-4 text-[15px] md:text-[16px] font-medium tracking-[-0.01em]",
         "transition-all duration-300 ease-out",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A0A0A] focus-visible:ring-offset-2",
         selected
           ? "bg-[#0A0A0A] text-white border-[#0A0A0A]"
-          : "bg-transparent text-[#6B6B6B] border-[#E8E8E8] hover:border-[#0A0A0A] hover:text-[#0A0A0A]"
+          : "bg-transparent text-[#4A4A4A] border-[#DADADA] hover:border-[#0A0A0A] hover:text-[#0A0A0A]"
       )}
     >
       {label}
@@ -50,7 +50,7 @@ function LargeOptionButton({
 
 const TOTAL_STEPS = 4;
 
-export function ContactForm() {
+export function ContactForm({ initialProjectType }: { initialProjectType?: string } = {}) {
   const revealRef = useReveal<HTMLDivElement>({ threshold: 0.08 });
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -76,7 +76,7 @@ export function ContactForm() {
       name: "",
       email: "",
       company: "",
-      projectType: "",
+      projectType: initialProjectType ?? "",
       timeline: "",
       message: "",
       company_website: "",
@@ -91,14 +91,10 @@ export function ContactForm() {
   const changeStep = async (newStep: number) => {
     if (newStep > step) {
       // Validate current step before proceeding
-      const fieldsToValidate = (() => {
-        if (step === 1) return ["projectType"];
-        if (step === 2) return ["timeline", "budget"];
-        if (step === 3) return ["message"];
-        return [];
-      })();
-      
-      const isStepValid = await trigger(fieldsToValidate as any);
+      const fieldsToValidate: (keyof ContactFormData)[] =
+        step === 1 ? ["projectType"] : step === 2 ? ["timeline", "budget"] : step === 3 ? ["message"] : [];
+
+      const isStepValid = await trigger(fieldsToValidate);
       if (!isStepValid) return;
     }
 
@@ -195,7 +191,7 @@ export function ContactForm() {
             </h2>
             <p className="text-[16px] text-[#6B6B6B] leading-[1.7]">
               Thanks for reaching out — we read every message ourselves and
-              reply within 24 hours.
+              reply within one working day.
             </p>
             <Button
               variant="secondary"
@@ -220,7 +216,13 @@ export function ContactForm() {
           </h2>
 
           {/* Progress Indicator */}
-          <div className="flex items-center justify-center mb-16">
+          <p className="sr-only" aria-live="polite">
+            Step {step} of {TOTAL_STEPS}
+          </p>
+          <div className="flex flex-col items-center gap-3 mb-14 md:mb-16" aria-hidden="true">
+            <span className="text-[12px] tracking-[0.14em] uppercase text-[#8A8A8A] tabular-nums">
+              Step {step} / {TOTAL_STEPS}
+            </span>
             <div className="flex items-center gap-2 md:gap-4">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div key={i} className="flex items-center gap-2 md:gap-4">
@@ -257,9 +259,9 @@ export function ContactForm() {
                     <h3 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#0A0A0A] mb-4">
                       What are you building?
                     </h3>
-                    <p className="text-[#6B6B6B] text-[18px]">Select the primary focus of your project.</p>
+                    <p className="text-[#6B6B6B] text-[16px] md:text-[18px]">Pick the closest fit — you can add detail later.</p>
                   </div>
-                  <div className="flex flex-col gap-3 max-w-[500px] mx-auto w-full" role="group" aria-label="Project type">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[640px] mx-auto w-full" role="group" aria-label="Project type">
                     {PROJECT_TYPES.map((type) => (
                       <LargeOptionButton
                         key={type}
@@ -346,6 +348,9 @@ export function ContactForm() {
                   </div>
 
                   <div className="flex flex-col gap-4">
+                    <label htmlFor="message" className="sr-only">
+                      Project details
+                    </label>
                     <textarea
                       id="message"
                       rows={5}
@@ -379,6 +384,7 @@ export function ContactForm() {
                     >
                       <input
                         type="file"
+                        aria-label="Attach a file (optional)"
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         accept=".pdf,.docx,.zip,.png,.jpg,.jpeg"
                         onChange={handleFileChange}
@@ -437,8 +443,11 @@ export function ContactForm() {
 
                   <div className="flex flex-col gap-10 max-w-[500px] mx-auto w-full">
                     <div className="flex flex-col gap-3">
+                      <label htmlFor="contact-name" className="eyebrow">Name</label>
                       <input
+                        id="contact-name"
                         type="text"
+                        autoComplete="name"
                         placeholder="Your full name"
                         aria-invalid={!!errors.name}
                         className={textInputClasses}
@@ -452,9 +461,12 @@ export function ContactForm() {
                     </div>
 
                     <div className="flex flex-col gap-3">
+                      <label htmlFor="contact-email" className="eyebrow">Email</label>
                       <input
+                        id="contact-email"
                         type="email"
-                        placeholder="Your email address"
+                        autoComplete="email"
+                        placeholder="you@company.com"
                         aria-invalid={!!errors.email}
                         className={textInputClasses}
                         {...register("email")}
@@ -467,9 +479,14 @@ export function ContactForm() {
                     </div>
 
                     <div className="flex flex-col gap-3">
+                      <label htmlFor="contact-company" className="eyebrow">
+                        Company <span className="normal-case tracking-normal text-[#A0A0A0]">(optional)</span>
+                      </label>
                       <input
+                        id="contact-company"
                         type="text"
-                        placeholder="Company name (optional)"
+                        autoComplete="organization"
+                        placeholder="Company or brand name"
                         className={textInputClasses}
                         {...register("company")}
                       />

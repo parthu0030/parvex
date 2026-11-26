@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 // ROOT LAYOUT — truly global document concerns only.
@@ -11,11 +11,18 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://parvex.in"),
   title: {
-    default: "Parvex — Digital Experience Studio",
+    default: "Parvex — Creative Technology Studio",
     template: "%s — Parvex",
   },
   description:
-    "Parvex is a modern Digital Experience Studio. We combine software engineering with creative media to help businesses build strong digital products and memorable visual identities.",
+    "Parvex is a creative technology studio designing and building websites, web applications and AI automation, with photography, videography and video editing in-house.",
+  applicationName: "Parvex",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

@@ -6,7 +6,8 @@ interface CaseStudyResultsProps {
 }
 
 /**
- * CaseStudyResults — Quantified outcomes in a clean metric grid.
+ * CaseStudyResults — Product highlights — what the build does. Only verified
+ * business outcomes belong here, never estimates.
  * Large numbers, concise labels, one-line descriptions.
  */
 export function CaseStudyResults({ project }: CaseStudyResultsProps) {
@@ -15,13 +16,13 @@ export function CaseStudyResults({ project }: CaseStudyResultsProps) {
       <Container>
         <div data-reveal className="mb-14 md:mb-16">
           <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B] mb-4">
-            <span className="text-[#C0C0C0] mr-2">07</span>Results
+            Highlights
           </p>
           <h2
             id="results-heading"
             className="text-2xl md:text-[36px] font-semibold text-[#0A0A0A] tracking-[-0.03em] leading-[1.2] max-w-[600px]"
           >
-            What changed after we shipped.
+            What the build does.
           </h2>
         </div>
 
@@ -37,7 +38,7 @@ export function CaseStudyResults({ project }: CaseStudyResultsProps) {
               </p>
               <p
                 className="font-semibold text-[#0A0A0A] tracking-[-0.04em] leading-[1.0] mb-4"
-                style={{ fontSize: "clamp(36px, 4vw, 52px)" }}
+                style={{ fontSize: "clamp(26px, 2.6vw, 34px)" }}
               >
                 {result.value}
               </p>

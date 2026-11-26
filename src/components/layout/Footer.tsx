@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { FOOTER_SECTIONS } from "@/constants/navigation";
+import { COMPANY } from "@/data/company";
 import { useRevealChildren } from "@/hooks/useReveal";
 
 export function Footer() {
@@ -11,46 +12,51 @@ export function Footer() {
   const colsRef = useRevealChildren<HTMLDivElement>(60, { threshold: 0.05 });
 
   return (
-    <footer className="bg-[#0A0A0A] border-t border-white/8" role="contentinfo">
+    <footer data-nav-theme="dark" className="bg-[#0A0A0A] text-white border-t border-white/[0.08]">
       <Container>
-        {/* Main Footer Grid */}
+        {/* Columns */}
         <div
           ref={colsRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 py-16 md:py-20"
+          className="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-12 pt-20 md:pt-24 pb-14 md:pb-16"
         >
-          {/* Brand Column */}
-          <div data-footer-col data-reveal-child className="flex flex-col gap-5 lg:col-span-1">
+          <div data-footer-col data-reveal-child className="col-span-2 lg:col-span-6 flex flex-col gap-5">
             <Link
               href="/"
-              className="w-fit opacity-95 hover:opacity-70 transition-opacity duration-200"
-              aria-label="Parvex — Home"
+              className="w-fit hover:opacity-70 transition-opacity duration-200"
+              aria-label="Parvex — home"
             >
-              <Logo variant="full" />
+              <Logo variant="mark" color="white" />
             </Link>
-            <p className="text-[13px] text-white/40 leading-[1.7] max-w-[200px]">
-              A modern Digital Experience Studio. We build what matters.
+            <p className="text-[14px] text-white/45 leading-[1.7] max-w-[320px]">
+              A creative technology studio designing and building websites,
+              applications, automation, photography and film.
             </p>
             <a
-              href="mailto:hello@parvex.in"
-              className="text-[13px] text-white/40 hover:text-white/70 transition-colors duration-200"
+              href={`mailto:${COMPANY.email}`}
+              className="link-draw w-fit text-[15px] text-white/80 hover:text-white transition-colors duration-200"
             >
-              hello@parvex.in
+              {COMPANY.email}
             </a>
           </div>
 
-          {/* Link Sections */}
           {FOOTER_SECTIONS.map((section) => (
-            <div key={section.heading} data-footer-col data-reveal-child className="flex flex-col gap-5">
-              <h3 className="text-[10px] font-semibold text-white/30 tracking-[0.14em] uppercase">
+            <nav
+              key={section.heading}
+              aria-label={section.heading}
+              data-footer-col
+              data-reveal-child
+              className="col-span-1 lg:col-span-3 flex flex-col gap-5"
+            >
+              <h2 className="text-[11px] font-semibold text-white/35 tracking-[0.14em] uppercase">
                 {section.heading}
-              </h3>
-              <ul className="flex flex-col gap-3" role="list">
+              </h2>
+              <ul className="flex flex-col gap-3">
                 {section.links.map((link) => (
                   <li key={link.label}>
                     {link.href.startsWith("http") || link.href.startsWith("mailto") ? (
                       <a
                         href={link.href}
-                        className="text-[14px] text-white/50 hover:text-white/90 transition-colors duration-200"
+                        className="text-[14px] text-white/60 hover:text-white transition-colors duration-200"
                         target={link.href.startsWith("http") ? "_blank" : undefined}
                         rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                       >
@@ -59,7 +65,7 @@ export function Footer() {
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-[14px] text-white/50 hover:text-white/90 transition-colors duration-200"
+                        className="text-[14px] text-white/60 hover:text-white transition-colors duration-200"
                       >
                         {link.label}
                       </Link>
@@ -67,19 +73,16 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 border-t border-white/8">
-          <p className="text-[12px] text-white/25">
+        {/* Bottom bar — extra bottom padding keeps it clear of the floating nav */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-6 pb-28 md:pb-32 border-t border-white/[0.08]">
+          <p className="text-[12px] text-white/35">
             © {currentYear} Parvex. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            <span className="text-[12px] text-white/25">Privacy</span>
-            <span className="text-[12px] text-white/25">Terms</span>
-          </div>
+          <p className="text-[12px] text-white/35">{COMPANY.tagline}</p>
         </div>
       </Container>
     </footer>

@@ -25,7 +25,6 @@ export function CaseStudyTechnology({ project }: CaseStudyTechnologyProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           <div data-reveal className="lg:col-span-3">
             <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B] lg:sticky lg:top-32">
-              <span className="block text-[#C0C0C0] mb-1">05</span>
               Technology
             </p>
           </div>

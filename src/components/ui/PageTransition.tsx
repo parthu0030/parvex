@@ -26,57 +26,59 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    const isRouteChange = prevPathRef.current !== pathname;
+    prevPathRef.current = pathname;
 
-    if (prevPathRef.current !== pathname) {
-      prevPathRef.current = pathname;
+    // Once the entrance finishes, drop every inline style. A lingering
+    // transform would make this wrapper the containing block for all
+    // `position: fixed` descendants (dialogs, lightboxes), pinning them to the
+    // top of the document instead of the viewport.
+    const clear = () => {
+      el.style.transition = "";
+      el.style.transform = "";
+      el.style.opacity = "";
+    };
 
-      if (prefersReduced) {
-        // Simple fade only for reduced motion
-        el.style.transition = "opacity 200ms ease-out";
-        el.style.opacity = "0";
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            el.style.opacity = "1";
-          });
-        });
-      } else {
-        // Premium entrance: fade + subtle lift
-        el.style.transition = "none";
-        el.style.opacity = "0";
-        el.style.transform = "translateY(28px)";
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            el.style.transition =
-              "opacity 550ms cubic-bezier(0.16, 1, 0.3, 1), transform 550ms cubic-bezier(0.16, 1, 0.3, 1)";
-            el.style.opacity = "1";
-            el.style.transform = "translateY(0)";
-          });
-        });
-      }
+    if (prefersReduced) {
+      if (!isRouteChange) return;
+      el.style.transition = "opacity 200ms ease-out";
+      el.style.opacity = "0";
     } else {
-      // Initial load
-      if (!prefersReduced) {
-        el.style.transition = "none";
-        el.style.opacity = "0";
-        el.style.transform = "translateY(20px)";
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            el.style.transition =
-              "opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1)";
-            el.style.opacity = "1";
-            el.style.transform = "translateY(0)";
-          });
-        });
-      }
+      el.style.transition = "none";
+      el.style.opacity = "0";
+      el.style.transform = `translateY(${isRouteChange ? 28 : 20}px)`;
     }
+
+    const duration = prefersReduced ? 200 : isRouteChange ? 550 : 500;
+    let raf2 = 0;
+    let fallback = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (!prefersReduced) {
+          el.style.transition = `opacity ${duration}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1)`;
+          el.style.transform = "translateY(0)";
+        }
+        el.style.opacity = "1";
+        // Fallback in case transitionend never fires (e.g. background tab).
+        fallback = window.setTimeout(clear, duration + 100);
+      });
+    });
+
+    const onEnd = (e: TransitionEvent) => {
+      if (e.target === el) clear();
+    };
+    el.addEventListener("transitionend", onEnd);
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.clearTimeout(fallback);
+      el.removeEventListener("transitionend", onEnd);
+    };
   }, [pathname]);
 
   return (
-    <div
-      ref={wrapperRef}
-      style={{ willChange: "opacity, transform" }}
-    >
+    <div ref={wrapperRef}>
       {children}
     </div>
   );

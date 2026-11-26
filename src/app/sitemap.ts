@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // so fragment URLs (e.g. /services#web-dev) are excluded from the sitemap
     // because Google ignores fragment identifiers. The page itself is indexed.
     { url: `${BASE_URL}/services`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/contact`, changeFrequency: "monthly", priority: 0.6 },
   ];
 

@@ -7,7 +7,7 @@ export function ContactClosing() {
   const ref = useReveal<HTMLDivElement>({ threshold: 0.15 });
 
   return (
-    <section className="py-28 md:py-40 bg-[#0A0A0A]" aria-label="Closing statement">
+    <section className="py-28 md:py-40 bg-[#0A0A0A]" data-nav-theme="dark" aria-label="Closing statement">
       <Container>
         <div
           ref={ref}

@@ -1,6 +1,12 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // A stray lockfile one directory up makes Next guess the wrong workspace
+  // root. Pin it to this project.
+  turbopack: {
+    root: path.resolve(process.cwd()),
+  },
   images: {
     remotePatterns: [
       {

@@ -1,111 +1,90 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { PHOTOGRAPHY } from "@/data/photography";
-import { VIDEOGRAPHY } from "@/data/videography";
+import { getPhoto } from "@/data/photography";
 import { useReveal, useRevealChildren } from "@/hooks/useReveal";
+import { cn } from "@/lib/utils";
 
-// Combined, ordered for this specific editorial grid layout.
-const MEDIA_ITEMS = [
-  PHOTOGRAPHY[0],
-  PHOTOGRAPHY[1],
-  PHOTOGRAPHY[4],
-  PHOTOGRAPHY[2],
-  VIDEOGRAPHY[0],
-  PHOTOGRAPHY[3],
+// Hand-sequenced for rhythm: landscape → portrait → landscape …
+const LAYOUT: { id: string; className: string; sizes: string }[] = [
+  { id: "landscape-summit", className: "col-span-2 md:col-span-7 aspect-[3/2]", sizes: "(max-width: 768px) 100vw, 58vw" },
+  { id: "street-portrait", className: "col-span-1 md:col-span-5 aspect-[3/4] md:aspect-auto", sizes: "(max-width: 768px) 50vw, 42vw" },
+  { id: "street-elders", className: "col-span-1 md:col-span-4 aspect-[3/4]", sizes: "(max-width: 768px) 50vw, 33vw" },
+  { id: "landscape-snowline", className: "col-span-2 md:col-span-8 aspect-[3/2] md:aspect-auto", sizes: "(max-width: 768px) 100vw, 66vw" },
 ];
 
+/**
+ * MediaShowcase — Parvex's own photography, curated and sequenced.
+ * No stock imagery and no fake "video" badges — just the work.
+ */
 export function MediaShowcase() {
   const headerRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
-  const gridRef = useRevealChildren<HTMLDivElement>(55, { threshold: 0.04 });
+  const gridRef = useRevealChildren<HTMLDivElement>(90, { threshold: 0.04 });
 
   return (
     <section
-      id="media"
-      className="py-28 md:py-36 lg:py-44 bg-white"
+      id="photography"
+      className="py-24 md:py-32 lg:py-40 bg-white"
       aria-labelledby="media-heading"
     >
       <Container>
-        {/* Header — editorial, wide */}
         <div
           ref={headerRef}
           data-reveal
-          className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 mb-16 md:mb-20 items-end"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-14 md:mb-20 items-end"
         >
-          <div className="flex flex-col gap-6">
-            <span className="text-[11px] font-medium tracking-[0.16em] uppercase text-[#6B6B6B]">
-              Photography & Film
-            </span>
+          <div className="lg:col-span-7 flex flex-col gap-6">
+            <span className="eyebrow">Photography & Film</span>
             <h2
               id="media-heading"
-              className="font-semibold tracking-[-0.035em] leading-[1.05] text-[#0A0A0A] text-4xl md:text-5xl lg:text-[52px]"
+              className="font-semibold tracking-[-0.035em] leading-[1.05] text-[#0A0A0A] text-[34px] md:text-5xl lg:text-[56px]"
             >
-              Through the lens,
-              <br />
-              we capture what
-              <br />
-              words cannot.
+              We also make
+              <span className="font-light italic text-[#6B6B6B]"> the pictures.</span>
             </h2>
           </div>
-          <p className="text-[#6B6B6B] text-[15px] md:text-base leading-[1.75] max-w-[380px]">
-            Editorial and commercial work for brands that understand the power
-            of image. Every frame is intentional. Every shot is earned.
-          </p>
+          <div className="lg:col-span-5 flex flex-col gap-6">
+            <p className="text-[16px] text-[#6B6B6B] leading-[1.75] max-w-[440px]">
+              Landscape and documentary work from our own archive — the same
+              eye we bring to product, brand and event shoots for clients.
+            </p>
+            <Link
+              href="/work#photography"
+              className="group inline-flex items-center gap-2 text-[14px] font-medium text-[#0A0A0A] w-fit"
+            >
+              <span className="link-draw">See the full series</span>
+              <ArrowUpRight size={16} aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+          </div>
         </div>
 
-        {/* Editorial grid — 3 columns, varied heights */}
-        <div
-          ref={gridRef}
-          className="grid grid-cols-2 md:grid-cols-12 gap-4 md:gap-5 auto-rows-[180px] md:auto-rows-[200px]"
-        >
-          <MediaItem item={MEDIA_ITEMS[0]} className="col-span-1 md:col-span-4 row-span-3" />
-          <MediaItem item={MEDIA_ITEMS[1]} className="col-span-1 md:col-span-5 row-span-2" />
-          <MediaItem item={MEDIA_ITEMS[5]} className="hidden md:block md:col-span-3 row-span-1" />
-          <MediaItem item={MEDIA_ITEMS[2]} className="hidden md:block md:col-span-3 row-span-2" />
-          <MediaItem item={MEDIA_ITEMS[3]} className="col-span-1 md:col-span-5 row-span-2" showVideoTag />
-          <MediaItem item={MEDIA_ITEMS[4]} className="col-span-1 md:col-span-3 row-span-1" />
+        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-12 gap-3 md:gap-5">
+          {LAYOUT.map(({ id, className, sizes }) => {
+            const photo = getPhoto(id);
+            return (
+              <figure
+                key={id}
+                data-reveal-child
+                className={cn("group relative overflow-hidden rounded-[12px] bg-[#E8E8E8] image-hover-zoom", className)}
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  className="object-cover object-center"
+                  sizes={sizes}
+                />
+                <figcaption className="absolute bottom-3 left-3 text-[10px] md:text-[11px] tracking-[0.14em] uppercase text-white/85 bg-black/35 backdrop-blur-sm rounded-full px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  {photo.category}
+                </figcaption>
+              </figure>
+            );
+          })}
         </div>
       </Container>
     </section>
-  );
-}
-
-interface MediaItemProps {
-  item: (typeof MEDIA_ITEMS)[0];
-  className?: string;
-  showVideoTag?: boolean;
-}
-
-function MediaItem({ item, className, showVideoTag }: MediaItemProps) {
-  return (
-    <div
-      data-reveal-child
-      className={`media-item group relative overflow-hidden rounded-[14px] bg-[#E8E8E8] ${className ?? ""}`}
-    >
-      <Image
-        src={item.src}
-        alt={item.alt}
-        fill
-        className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-        sizes="(max-width: 768px) 50vw, 25vw"
-      />
-
-      {/* Video badge */}
-      {(item.type === "video" || showVideoTag) && (
-        <div className="absolute top-3.5 left-3.5 bg-white/92 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#0A0A0A]" aria-hidden="true" />
-          <span className="text-[9px] font-semibold tracking-[0.1em] uppercase text-[#0A0A0A]">
-            Video
-          </span>
-        </div>
-      )}
-
-      {/* Hover overlay */}
-      <div
-        className="absolute inset-0 bg-[#0A0A0A]/0 group-hover:bg-[#0A0A0A]/10 transition-all duration-500"
-        aria-hidden="true"
-      />
-    </div>
   );
 }
