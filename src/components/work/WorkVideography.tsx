@@ -1,71 +1,73 @@
 "use client";
 
 import Image from "next/image";
-import { Play } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { PHOTOGRAPHY } from "@/data/photography";
-import { VIDEOGRAPHY } from "@/data/videography";
-import { useReveal, useRevealChildren } from "@/hooks/useReveal";
+import { Button } from "@/components/ui/Button";
+import { IMAGERY } from "@/data/imagery";
+import { useReveal } from "@/hooks/useReveal";
 
-const VIDEO_STILLS = [...VIDEOGRAPHY, ...PHOTOGRAPHY.slice(0, 2)];
+const CAPABILITIES = [
+  { title: "Brand & product films", body: "Concept, script, direction and shoot for launches and brand stories." },
+  { title: "Event coverage", body: "Live performances, conferences and launches, captured as they happen." },
+  { title: "Editing & colour", body: "Story structure, pacing, grade and sound for footage you already have." },
+  { title: "Social cuts", body: "Vertical and short-form versions edited for each platform." },
+];
 
 /**
- * WorkVideography — cinematic still-frame showcase.
- * No autoplay (per project rules: never autoplay audio/video). Each tile
- * presents a still frame with a play affordance, matching premium studio
- * sites that lead with imagery rather than embedded players.
+ * WorkVideography — film & motion capability.
+ *
+ * Deliberately no fake "play" buttons over still images. When real reels are
+ * added to src/data/videography.ts they can be presented here.
  */
 export function WorkVideography() {
-  const headerRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
-  const gridRef = useRevealChildren<HTMLDivElement>(90, { threshold: 0.06 });
+  const ref = useReveal<HTMLDivElement>({ threshold: 0.08 });
 
   return (
     <section
-      id="videography"
-      className="py-20 md:py-28 lg:py-32 bg-white"
-      aria-labelledby="work-videography-heading"
+      id="film"
+      className="scroll-mt-24 py-24 md:py-32 lg:py-40 bg-white"
+      aria-labelledby="work-film-heading"
     >
       <Container>
-        <div ref={headerRef} data-reveal className="mb-14 md:mb-18">
-          <SectionHeader
-            eyebrow="Videography"
-            title="Stories told in motion."
-            id="work-videography-heading"
-          />
-        </div>
-
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-          {VIDEO_STILLS.slice(0, 3).map((item, index) => (
-            <div
-              key={item.id}
-              data-reveal-child
-              className={
-                index === 0
-                  ? "md:col-span-2 relative aspect-[21/9] rounded-[16px] overflow-hidden bg-[#0A0A0A] group cursor-pointer"
-                  : "relative aspect-[4/3] rounded-[16px] overflow-hidden bg-[#0A0A0A] group cursor-pointer"
-              }
-            >
-              <Image
-                src={item.src}
-                alt={item.alt}
-                fill
-                loading="lazy"
-                className="object-cover object-center opacity-90 transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                sizes={index === 0 ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
-              />
-              <div
-                className="absolute inset-0 bg-[#0A0A0A]/35 group-hover:bg-[#0A0A0A]/45 transition-colors duration-500"
-                aria-hidden="true"
-              />
-              {/* Play affordance — no autoplay, still frame only */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-white/95 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                  <Play size={20} className="text-[#0A0A0A] ml-0.5" fill="currentColor" />
-                </div>
-              </div>
+        <div ref={ref} data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Production imagery only — the stage still lives in the
+              Cinematic Frames collection above, so it isn't repeated here. */}
+          <div className="lg:col-span-6 grid grid-cols-5 gap-3 md:gap-4">
+            <div className="col-span-3 relative aspect-[3/4] rounded-[12px] overflow-hidden bg-[#E8E8E8]">
+              <Image src={IMAGERY.videography.src} alt={IMAGERY.videography.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 60vw, 30vw" />
             </div>
-          ))}
+            <div className="col-span-2 relative rounded-[12px] overflow-hidden bg-[#E8E8E8]">
+              <Image src={IMAGERY.videoEditing.src} alt={IMAGERY.videoEditing.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 40vw, 20vw" />
+            </div>
+          </div>
+
+          <div className="lg:col-span-6 flex flex-col gap-8 lg:pl-6">
+            <span className="eyebrow">Film & Motion</span>
+            <h2
+              id="work-film-heading"
+              className="font-semibold tracking-[-0.035em] leading-[1.05] text-[#0A0A0A] text-[34px] md:text-5xl"
+            >
+              Stories told
+              <span className="font-light italic text-[#6B6B6B]"> in motion.</span>
+            </h2>
+            <p className="text-[16px] text-[#6B6B6B] leading-[1.75] max-w-[520px]">
+              From pre-production to final grade, we shoot and edit video with
+              the same intent we bring to photography: every frame has a job.
+              Reels are shared on request for the kind of work you&apos;re
+              planning.
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 border-t border-[#E8E8E8]">
+              {CAPABILITIES.map((c) => (
+                <li key={c.title} className="py-5 border-b border-[#E8E8E8] flex flex-col gap-1.5">
+                  <h3 className="text-[16px] font-semibold text-[#0A0A0A] tracking-[-0.01em]">{c.title}</h3>
+                  <p className="text-[14px] text-[#6B6B6B] leading-[1.6]">{c.body}</p>
+                </li>
+              ))}
+            </ul>
+            <Button href="/contact?service=videography" variant="primary" size="md" className="w-fit btn-interactive">
+              Ask for a reel
+            </Button>
+          </div>
         </div>
       </Container>
     </section>

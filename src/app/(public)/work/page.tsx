@@ -3,49 +3,24 @@ import { WorkHero } from "@/components/work/WorkHero";
 import { WorkGrid } from "@/components/work/WorkGrid";
 import { WorkPhotography } from "@/components/work/WorkPhotography";
 import { WorkVideography } from "@/components/work/WorkVideography";
-import { FutureWork } from "@/components/work/FutureWork";
-import { WorkCTA } from "@/components/work/WorkCTA";
+import { CTASection } from "@/components/home/CTASection";
 import { getPublishedProjects } from "@/lib/queries/projects";
 import { getPageContent } from "@/lib/queries/content";
+import { buildPageMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getPageContent("WORK");
-
-  return {
-    title: content?.metaTitle ?? "Selected Work — Parvex",
+  return buildPageMetadata({
+    title: content?.metaTitle ?? "Selected Work",
     description:
       content?.metaDescription ??
-      "A curated selection of products, platforms, and visual work by Parvex — including AuditGPT, Resume Analyzer, and Movie Ticket Booking. Each project shaped by a real problem and shipped to a real standard.",
-    keywords: [
-      "Parvex work",
-      "Parvex portfolio",
-      "case studies",
-      "digital experience studio",
-      "web development",
-      "AI products",
-      "photography",
-      "videography",
-    ],
-    openGraph: {
-      type: "website",
-      locale: "en_IN",
-      url: "https://parvex.in/work",
-      siteName: "Parvex",
-      title: content?.metaTitle ?? "Selected Work — Parvex",
-      description: content?.metaDescription ?? "A curated selection of products, platforms, and visual work by Parvex.",
-      images: [{ url: "/assets/logos/parvex-og-image.png", width: 1200, height: 630, alt: "Parvex — Beyond Excellence" }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: content?.metaTitle ?? "Selected Work — Parvex",
-      description: content?.metaDescription ?? "A curated selection of products, platforms, and visual work by Parvex.",
-      images: ["/assets/logos/parvex-og-image.png"],
-    },
-    alternates: { canonical: content?.canonicalUrl ?? "https://parvex.in/work" },
-    robots: content?.noIndex ? { index: false, follow: false } : undefined,
-  };
+      "Case studies from Parvex — AI products, web applications and editorial photography, each written up with the problem, the approach and how it was built.",
+    path: "/work",
+    canonical: content?.canonicalUrl,
+    noIndex: content?.noIndex,
+  });
 }
 
 export default async function WorkPage() {
@@ -55,21 +30,21 @@ export default async function WorkPage() {
     slug: p.slug,
     title: p.title,
     category: p.category,
-    description: p.description,
-    thumbnail: p.thumbnail?.url ?? p.coverImage?.url ?? "/assets/projects/auditgpt.png",
-    thumbnailAlt: p.thumbnail?.altText ?? p.title,
-    services: p.services,
     year: p.year,
+    description: p.description,
+    services: p.services,
+    status: p.deliveryStatus,
+    imageSrc: p.coverImage?.url ?? p.thumbnail?.url ?? "/assets/projects/auditgpt.png",
+    imageAlt: p.coverImage?.altText ?? p.thumbnail?.altText ?? p.title,
   }));
 
   return (
     <>
-      <WorkHero />
+      <WorkHero projectCount={workCards.length} />
       <WorkGrid projects={workCards} />
       <WorkPhotography />
       <WorkVideography />
-      <FutureWork />
-      <WorkCTA />
+      <CTASection headline="Like what you see?" />
     </>
   );
 }

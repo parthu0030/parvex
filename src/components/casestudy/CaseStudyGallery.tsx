@@ -29,7 +29,7 @@ export function CaseStudyGallery({ project }: CaseStudyGalleryProps) {
       <Container>
         <div data-reveal className="mb-12">
           <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B]">
-            <span className="text-[#C0C0C0] mr-2">06</span>Gallery
+            Gallery
           </p>
         </div>
 
@@ -46,8 +46,7 @@ export function CaseStudyGallery({ project }: CaseStudyGalleryProps) {
               src={primary.src}
               alt={primary.alt}
               fill
-              unoptimized={primary.src.startsWith("http")}
-              className="object-cover object-center"
+              className={`object-cover object-center ${primary.src.includes("images.unsplash.com") ? "img-mono" : ""}`}
               sizes="(max-width: 1400px) 100vw, 1400px"
             />
           </div>
@@ -75,8 +74,7 @@ export function CaseStudyGallery({ project }: CaseStudyGalleryProps) {
                     src={img.src}
                     alt={img.alt}
                     fill
-                    unoptimized={img.src.startsWith("http")}
-                    className="object-cover object-center"
+                    className={`object-cover object-center ${img.src.includes("images.unsplash.com") ? "img-mono" : ""}`}
                     sizes="(max-width: 768px) 100vw, (max-width: 1400px) 50vw, 33vw"
                   />
                 </div>

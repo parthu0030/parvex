@@ -1,7 +1,8 @@
-export { PROJECTS, getProjectBySlug, getNextProject, getAllProjectSlugs, getFeaturedProjects, FEATURED_PROJECTS } from "./projects";
-export { SERVICES } from "./services";
-export { PHOTOGRAPHY } from "./photography";
+export { PROJECTS, getProjectBySlug, getNextProject, getAllProjectSlugs } from "./projects";
+export { SERVICES, getServicePresentation, SERVICE_DISCIPLINES } from "./services";
+export { PHOTOGRAPHY, STAGE_PHOTO, getPhoto } from "./photography";
 export { VIDEOGRAPHY } from "./videography";
+export { IMAGERY } from "./imagery";
 export { TEAM } from "./team";
 export { TESTIMONIALS } from "./testimonials";
 export { FAQ } from "./faq";

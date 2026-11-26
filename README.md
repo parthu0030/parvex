@@ -5,6 +5,13 @@ Website Content, Media Library, Messages, Leads, SEO, Analytics, Users, and
 Settings — all backed by PostgreSQL via Prisma, media via Cloudinary, auth via
 Better Auth, and transactional email via Resend.
 
+- **Repository:** https://github.com/parthu0030/parvex
+- **Studio contact:** parvex3303@gmail.com · +91 79900 32648 (call or WhatsApp)
+
+Public contact details live in `src/data/company.ts` (`COMPANY`, `CONTACT_LINKS`);
+change them there and every page — footer, contact page, CTAs, structured data —
+updates together.
+
 ## Stack
 
 - **Framework:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4
@@ -17,6 +24,8 @@ Better Auth, and transactional email via Resend.
 
 ## 1. Install
 
+Requirements: Node.js 20 or newer and access to a PostgreSQL database.
+
 ```bash
 npm install
 ```
@@ -27,28 +36,27 @@ npm install
 cp .env.example .env
 ```
 
-Fill in every variable — see comments in `.env.example` for where to get each
-one (Postgres connection string, Cloudinary keys, Resend key, Better Auth
-secret, initial admin credentials).
+Fill in the variables in `.env` (see `.env.example`). `DATABASE_URL` is the
+PostgreSQL connection string Prisma uses at runtime; `DIRECT_URL` is the direct
+PostgreSQL connection string Prisma uses for migrations. For local Postgres,
+these can be the same value. For a hosted database with a pooled connection,
+use its direct/unpooled URL for `DIRECT_URL`. Both are required by
+`prisma/schema.prisma`. Set the Better Auth secret and initial admin credentials
+as well. Cloudinary and Resend are optional for running locally; uploads and
+email notifications need their respective credentials.
 
 ## 3. Set up the database
 
 ```bash
 npx prisma generate         # generates the typed Prisma Client from prisma/schema.prisma
-npx prisma migrate dev --name init   # creates tables (use `migrate deploy` in production)
+npx prisma migrate dev --name init   # creates tables (first-time local setup)
 npm run db:seed             # creates your first SUPER_ADMIN + migrates existing
                              # static project/service content into Postgres
 ```
 
-> **Note on this delivery:** `prisma generate` needs to download a small
-> platform-specific engine binary from Prisma's CDN. The sandbox this project
-> was assembled in blocks that domain, so the Prisma Client could not be
-> generated or the app built there — this is a network-egress restriction of
-> that environment, not a defect in the code. Run the three commands above in
-> your own machine/CI/deploy target and it will work normally; this is a
-> completely standard step for any Prisma project. Everything else (npm
-> install, ESLint, `tsc` type-checking with a hand-written stub of the Prisma
-> types) was verified in the sandbox and passes cleanly.
+If the database already has migrations applied, use `npx prisma migrate dev`
+without `--name init`. For production, run `npx prisma migrate deploy` instead
+of `migrate dev`.
 
 ## 4. Run it
 
@@ -60,6 +68,9 @@ npm run dev
 - Admin: `http://localhost:3000/admin/login` — sign in with the
   `PARVEX_INITIAL_ADMIN_EMAIL` / `PARVEX_INITIAL_ADMIN_PASSWORD` you set in
   `.env` before seeding.
+
+Stop the development server with **Ctrl+C**. To run the optimized production
+build locally, use `npm run build` followed by `npm run start`.
 
 ## What's in the Admin
 

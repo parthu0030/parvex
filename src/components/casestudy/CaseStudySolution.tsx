@@ -16,7 +16,6 @@ export function CaseStudySolution({ project }: CaseStudySolutionProps) {
           {/* Label */}
           <div data-reveal className="lg:col-span-3">
             <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B] lg:sticky lg:top-32">
-              <span className="block text-[#C0C0C0] mb-1">02</span>
               Solution
             </p>
           </div>

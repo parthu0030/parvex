@@ -1,12 +1,15 @@
 import { Hero } from "@/components/home/Hero";
+import { StudioIntro } from "@/components/home/StudioIntro";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { ProjectsPreview } from "@/components/home/ProjectsPreview";
-import { MediaShowcase } from "@/components/home/MediaShowcase";
+import { AboutPreview } from "@/components/home/AboutPreview";
 import { CTASection } from "@/components/home/CTASection";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getFeaturedProjects } from "@/lib/queries/projects";
 import { getPublishedServices } from "@/lib/queries/services";
 import { getPageContent } from "@/lib/queries/content";
 import { prisma } from "@/lib/db/prisma";
+import { COMPANY, CONTACT_LINKS, REPOSITORY_URL, SITE_URL } from "@/data/company";
 
 export const revalidate = 3600; // ISR fallback; Admin mutations explicitly revalidatePath() too
 
@@ -25,34 +28,65 @@ export default async function HomePage() {
     slug: p.slug,
     title: p.title,
     category: p.category,
+    year: p.year,
     description: p.description,
-    imageSrc: p.thumbnail?.url ?? p.coverImage?.url ?? "/assets/projects/auditgpt.png",
-    imageAlt: p.thumbnail?.altText ?? p.title,
+    services: p.services,
+    status: p.deliveryStatus,
+    imageSrc: p.coverImage?.url ?? p.thumbnail?.url ?? "/assets/projects/auditgpt.png",
+    imageAlt: p.coverImage?.altText ?? p.thumbnail?.altText ?? p.title,
   }));
 
-  const serviceViews = services.slice(0, 4).map((s) => ({
+  const serviceViews = services.map((s) => ({
     slug: s.slug,
     number: s.number,
     title: s.title,
     description: s.description,
   }));
 
+  const email = settings?.primaryEmail ?? COMPANY.email;
+
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ProfessionalService",
+          name: COMPANY.name,
+          description: COMPANY.description,
+          url: SITE_URL,
+          email,
+          telephone: CONTACT_LINKS.phoneE164,
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "sales",
+            email,
+            telephone: CONTACT_LINKS.phoneE164,
+          },
+          sameAs: [REPOSITORY_URL],
+          logo: `${SITE_URL}/assets/logos/parvex-logo-full.png`,
+          image: `${SITE_URL}/assets/logos/parvex-og-image.png`,
+          slogan: COMPANY.tagline,
+          knowsAbout: services.map((s) => s.title),
+        }}
+      />
+      {/* Poster hero — intentionally unchanged. */}
       <Hero
         eyebrow={content?.heroEyebrow ?? undefined}
         supportingCopy={content?.heroSupportingCopy ?? undefined}
         primaryCtaLabel={content?.primaryCtaLabel ?? undefined}
         primaryCtaLink={content?.primaryCtaLink ?? undefined}
       />
-      <ServicesPreview services={serviceViews} heading={content?.servicesHeading ? content.servicesHeading : undefined} />
+      <StudioIntro />
+      <ServicesPreview services={serviceViews} heading={content?.servicesHeading || undefined} />
+      {/* Light → dark → light rhythm: About (dark) sits between Services and
+          Work. Photography lives in the portfolio at /work#photography. */}
+      <AboutPreview />
       <ProjectsPreview projects={projectViews} heading={content?.selectedWorkHeading ?? undefined} />
-      <MediaShowcase />
       <CTASection
         headline={content?.finalCtaHeadline ?? undefined}
         ctaLabel={content?.finalCtaLabel ?? undefined}
         ctaLink={content?.finalCtaLink ?? undefined}
-        contactEmail={settings?.primaryEmail ?? undefined}
+        contactEmail={email}
       />
     </>
   );

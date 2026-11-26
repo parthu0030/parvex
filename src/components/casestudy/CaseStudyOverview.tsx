@@ -15,7 +15,7 @@ export function CaseStudyOverview({ project }: CaseStudyOverviewProps) {
     { label: "Year", value: project.year },
     { label: "Duration", value: project.duration },
     { label: "Status", value: project.status },
-  ];
+  ].filter((f) => f.value);
 
   return (
     <section className="py-20 md:py-28 border-b border-[#E8E8E8]" aria-label="Project overview">
@@ -26,6 +26,13 @@ export function CaseStudyOverview({ project }: CaseStudyOverviewProps) {
             <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B] mb-5">
               Services
             </p>
+            {project.status === "Concept" && (
+              <p className="mb-8 max-w-[560px] text-[14px] leading-[1.7] text-[#4A4A4A] border-l-2 border-[#0A0A0A] pl-4">
+                This is a concept project — a self-initiated exploration of
+                how we would approach the problem, not a commissioned client
+                engagement.
+              </p>
+            )}
             <div className="flex flex-wrap gap-3">
               {project.services.map((service) => (
                 <span

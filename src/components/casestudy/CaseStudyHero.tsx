@@ -27,17 +27,14 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
           <Badge className="bg-[#0A0A0A]/5 text-[#0A0A0A] border-[#0A0A0A]/10">
             {project.category}
           </Badge>
-          <span className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#6B6B6B]">
-            {project.year}
-          </span>
-          <span className="w-1 h-1 rounded-full bg-[#D0D0D0]" aria-hidden="true" />
-          <span className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#6B6B6B]">
-            {project.duration}
-          </span>
-          <span className="w-1 h-1 rounded-full bg-[#D0D0D0]" aria-hidden="true" />
-          <span className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#6B6B6B]">
-            {project.status}
-          </span>
+          {[project.year, project.duration, project.status === "Concept" ? "Concept project" : project.status]
+            .filter(Boolean)
+            .map((item, i) => (
+              <span key={item} className="flex items-center gap-3">
+                {i > 0 && <span className="w-1 h-1 rounded-full bg-[#D0D0D0]" aria-hidden="true" />}
+                <span className="text-[11px] font-medium tracking-[0.12em] uppercase text-[#6B6B6B]">{item}</span>
+              </span>
+            ))}
         </div>
 
         {/* Title */}
@@ -64,15 +61,14 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
       <div
         data-hero="image"
         data-hero-delay="360"
-        className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-[#E8E8E8] overflow-hidden"
+        className="relative mx-auto w-full max-w-[1600px] aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] bg-[#E8E8E8] overflow-hidden"
       >
         <Image
           src={project.coverImage}
           alt={project.coverImageAlt}
           fill
           priority
-          unoptimized={project.coverImage.startsWith("http")}
-          className="object-cover object-center"
+          className={`object-cover object-center ${project.coverImage.includes("images.unsplash.com") ? "img-mono" : ""}`}
           sizes="100vw"
         />
       </div>

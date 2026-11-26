@@ -2,6 +2,11 @@
   "name": "parvex-web",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parthu0030/parvex.git"
+  },
+  "homepage": "https://parvex.in",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
@@ -40,7 +45,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
-    "prisma": "^6.3.1",
+    "prisma": "^8.0.0-rc.36",
     "tailwindcss": "^4",
     "tsx": "^4.19.2",
     "typescript": "^5"

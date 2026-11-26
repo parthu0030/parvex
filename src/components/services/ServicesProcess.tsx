@@ -3,11 +3,11 @@ import { ProcessTimeline, type ProcessStep } from "@/components/ui/ProcessTimeli
 // Local to this section — mirrors how FutureWork.tsx keeps a short,
 // page-specific list inline rather than in /data.
 const PROCESS_STEPS: ProcessStep[] = [
-  { id: "discovery", label: "Discovery", description: "We learn your business, your users, and your goals." },
-  { id: "strategy", label: "Strategy", description: "We map the right approach before writing a line of code." },
-  { id: "design", label: "Design", description: "We shape the structure, hierarchy, and visual language." },
-  { id: "development", label: "Development", description: "We build it properly — clean, tested, production-ready." },
-  { id: "launch", label: "Launch", description: "We ship, monitor, and stay close for what comes next." },
+  { id: "discovery", label: "Discovery", description: "A focused conversation about your goals, audience and constraints. You get a clear scope and estimate." },
+  { id: "strategy", label: "Strategy", description: "We map structure, content and the right technology before anything is designed or built." },
+  { id: "design", label: "Design & Production", description: "Interfaces, identity or shoots take shape — shared early, refined together at each milestone." },
+  { id: "development", label: "Build", description: "Clean, tested, production-ready engineering and post-production, reviewed in stages." },
+  { id: "launch", label: "Launch & Support", description: "We ship, measure what matters and stay close for what comes next." },
 ];
 
 /**
@@ -21,6 +21,7 @@ export function ServicesProcess() {
       eyebrow="How We Work"
       title="A process built for clarity."
       steps={PROCESS_STEPS}
+      tone="muted"
     />
   );
 }

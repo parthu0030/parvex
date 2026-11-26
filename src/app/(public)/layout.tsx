@@ -8,40 +8,44 @@ import { PageTransition } from "@/components/ui/PageTransition";
 // PUBLIC LAYOUT — owns the entire approved public experience.
 // Nothing here may run inside /admin. Do not add Admin concerns to this file.
 
+const DESCRIPTION =
+  "A creative technology studio for websites, web applications, UI/UX, branding, photography, videography, video editing and AI automation.";
+
 export const metadata: Metadata = {
   keywords: [
-    "digital experience studio",
-    "web development",
-    "app development",
+    "creative technology studio",
+    "website design and development",
+    "web application development",
+    "UI/UX design",
+    "branding studio",
     "photography",
     "videography",
-    "UI/UX design",
-    "branding",
+    "video editing",
+    "AI automation",
   ],
   authors: [{ name: "Parvex" }],
   creator: "Parvex",
+  alternates: { canonical: "https://parvex.in" },
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: "https://parvex.in",
     siteName: "Parvex",
-    title: "Parvex — Digital Experience Studio",
-    description:
-      "We combine software engineering with creative media to help businesses build strong digital products and memorable visual identities.",
+    title: "Parvex — Creative Technology Studio",
+    description: DESCRIPTION,
     images: [
       {
         url: "/assets/logos/parvex-og-image.png",
         width: 1200,
         height: 630,
-        alt: "Parvex — Beyond Excellence",
+        alt: "Parvex — Creative Technology Studio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Parvex — Digital Experience Studio",
-    description:
-      "We combine software engineering with creative media to help businesses build strong digital products and memorable visual identities.",
+    title: "Parvex — Creative Technology Studio",
+    description: DESCRIPTION,
     images: ["/assets/logos/parvex-og-image.png"],
   },
   robots: {

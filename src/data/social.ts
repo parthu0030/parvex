@@ -1,9 +1,14 @@
 import type { SocialLink } from "@/types";
 
-// TODO: replace with real profile URLs once available — currently placeholders
-// so the navbar/footer links don't silently point nowhere forever.
+// Add real profile URLs here (or in Admin → Settings). Entries with an empty
+// or "#" href are filtered out by `ACTIVE_SOCIAL_LINKS`, so the site never
+// shows a social link that leads nowhere.
 export const SOCIAL_LINKS: SocialLink[] = [
   { platform: "Instagram", href: "#", icon: "instagram" },
   { platform: "LinkedIn", href: "#", icon: "linkedin" },
   { platform: "Behance", href: "#", icon: "globe" },
 ];
+
+export const ACTIVE_SOCIAL_LINKS = SOCIAL_LINKS.filter(
+  (link) => link.href && link.href !== "#"
+);

@@ -16,6 +16,7 @@ export type PublicProjectSummary = {
   description: string;
   year: string;
   services: string[];
+  deliveryStatus: "LIVE" | "IN_PROGRESS" | "CONCEPT";
   displayOrder?: number;
   featured?: boolean;
   noIndex: boolean;
@@ -27,7 +28,6 @@ export type PublicProjectSummary = {
 export type PublicProjectDetail = PublicProjectSummary & {
   clientName: string | null;
   clientType: "INTERNAL" | "CLIENT";
-  deliveryStatus: "LIVE" | "IN_PROGRESS" | "CONCEPT";
   duration: string | null;
   challenge: string | null;
   solution: string | null;
@@ -56,6 +56,10 @@ const projectDetailInclude = {
 type PrismaProjectDetail = Prisma.ProjectGetPayload<{ include: typeof projectDetailInclude }>;
 type GalleryAspect = PublicProjectDetail["gallery"][number]["aspect"];
 
+function toDeliveryStatus(status: string): PublicProjectSummary["deliveryStatus"] {
+  return status === "Live" ? "LIVE" : status === "In Progress" ? "IN_PROGRESS" : "CONCEPT";
+}
+
 function mediaFromStatic(url: string, altText: string): QueryMedia {
   return { url, altText };
 }
@@ -69,6 +73,7 @@ function staticProjectSummary(): PublicProjectSummary[] {
     description: project.description,
     year: project.year,
     services: project.services,
+    deliveryStatus: toDeliveryStatus(project.status),
     displayOrder: index,
     featured: index < 4,
     noIndex: false,
@@ -90,8 +95,7 @@ function staticProjectDetail(slug: string): PublicProjectDetail | null {
     year: project.year,
     clientName: project.client,
     clientType: project.client?.toLowerCase().includes("internal") ? "INTERNAL" : "CLIENT",
-    deliveryStatus:
-      project.status === "Live" ? "LIVE" : project.status === "In Progress" ? "IN_PROGRESS" : "CONCEPT",
+    deliveryStatus: toDeliveryStatus(project.status),
     duration: project.duration,
     description: project.description,
     coverImage: mediaFromStatic(project.coverImage, project.coverImageAlt),
@@ -225,6 +229,7 @@ export async function getAdjacentProjects(
         description: true,
         year: true,
         services: true,
+        deliveryStatus: true,
         noIndex: true,
         updatedAt: true,
         thumbnail: { select: { url: true, altText: true } },

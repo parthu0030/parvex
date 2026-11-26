@@ -46,8 +46,7 @@ export function CaseStudyNavigation({ nextProject }: CaseStudyNavigationProps) {
                 src={nextProject.thumbnail}
                 alt={nextProject.thumbnailAlt}
                 fill
-                unoptimized={nextProject.thumbnail.startsWith("http")}
-                className="object-cover object-center"
+                className={`object-cover object-center ${nextProject.thumbnail.includes("images.unsplash.com") ? "img-mono" : ""}`}
                 sizes="(max-width: 1024px) 100vw, 33vw"
               />
             </div>

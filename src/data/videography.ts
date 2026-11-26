@@ -1,12 +1,10 @@
 import type { Video } from "@/types";
 
-export const VIDEOGRAPHY: Video[] = [
-  {
-    id: "video-1",
-    type: "video",
-    src: "/assets/services/videography.png",
-    alt: "Video production — cinematic storytelling by Parvex",
-    aspect: "landscape",
-    category: "Brand Film",
-  },
-];
+/**
+ * Film & motion reels.
+ *
+ * Intentionally empty: the site previously showed still images dressed up
+ * with "Play" buttons that played nothing. Add real reels here (hosted on
+ * Cloudinary, with a `posterSrc` still) and the Work page will render them.
+ */
+export const VIDEOGRAPHY: Video[] = [];

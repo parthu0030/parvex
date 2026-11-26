@@ -1,12 +1,41 @@
 import { z } from "zod";
 
-export const PROJECT_TYPES = [
-  "Web Development",
-  "App Development",
-  "Photography",
-  "Videography",
-  "Something Else",
+/**
+ * Enquiry options shown on the contact form. `value` is the URL-safe key used
+ * by `/contact?service=<value>` deep links (CTA chips, service pages); the
+ * human-readable `label` is what gets stored on the message.
+ */
+export const INQUIRY_OPTIONS = [
+  { value: "website", label: "Website" },
+  { value: "web-application", label: "Web Application" },
+  { value: "ui-ux-design", label: "UI/UX Design" },
+  { value: "branding", label: "Branding" },
+  { value: "photography", label: "Photography" },
+  { value: "videography", label: "Videography" },
+  { value: "video-editing", label: "Video Editing" },
+  { value: "ai-automation", label: "AI Automation" },
+  { value: "something-else", label: "Something Else" },
 ] as const;
+
+export const PROJECT_TYPES = INQUIRY_OPTIONS.map((o) => o.label);
+
+/** Maps service-page slugs (and legacy slugs) to an enquiry option value. */
+const SERVICE_SLUG_TO_INQUIRY: Record<string, string> = {
+  "website-design-development": "website",
+  "web-development": "website",
+  "web-applications": "web-application",
+  "app-development": "web-application",
+  "branding-digital-experiences": "branding",
+  "ai-products": "ai-automation",
+  "creative-technology": "something-else",
+};
+
+/** Resolve a `?service=` query value to the stored project-type label. */
+export function resolveInquiryLabel(service: string | null | undefined): string | undefined {
+  if (!service) return undefined;
+  const key = SERVICE_SLUG_TO_INQUIRY[service] ?? service;
+  return INQUIRY_OPTIONS.find((o) => o.value === key)?.label;
+}
 
 export const BUDGET_RANGES = [
   "Exploring / Not Sure Yet",
