@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
+import { InstagramLink } from "@/components/ui/InstagramLink";
 import { FEATURED_VIDEO_IDS, VIDEOGRAPHY, VIDEO_CATEGORIES, formatDuration } from "@/data/videography";
 import { useReveal, useRevealChildren } from "@/hooks/useReveal";
 import { VideoFrame, VideoMeta } from "@/components/videography/VideoCard";
@@ -78,6 +79,7 @@ export function VideoPortfolio() {
               way people actually watch now. Hover to preview, click to play
               with sound.
             </p>
+            <InstagramLink label="More films on Instagram" />
           </div>
           <dl className="lg:col-span-5 grid grid-cols-3 border-t border-white/10">
             {[

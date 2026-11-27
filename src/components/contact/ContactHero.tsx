@@ -94,8 +94,9 @@ export function ContactHero() {
               <ul className="flex gap-5 pt-4">
                 {ACTIVE_SOCIAL_LINKS.map((s) => (
                   <li key={s.platform}>
-                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="link-draw text-[14px] text-[#0A0A0A]">
-                      {s.platform}
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-baseline gap-2 text-[14px] text-[#0A0A0A]">
+                      <span className="link-draw">{s.platform}</span>
+                      {s.handle && <span className="text-[13px] text-[#8A8A8A]">{s.handle}</span>}
                     </a>
                   </li>
                 ))}

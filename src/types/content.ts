@@ -42,6 +42,8 @@ export interface SocialLink {
   href: string;
   /** Lucide icon name, resolved by the component that renders it. */
   icon?: string;
+  /** Public handle shown next to the platform, e.g. "@parthu.jpeg". */
+  handle?: string;
 }
 
 export interface Company {

@@ -19,7 +19,11 @@ export function Footer() {
           ref={colsRef}
           className="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-12 pt-20 md:pt-24 pb-14 md:pb-16"
         >
-          <div data-footer-col data-reveal-child className="col-span-2 lg:col-span-6 flex flex-col gap-5">
+          <div
+            data-footer-col
+            data-reveal-child
+            className={`col-span-2 ${FOOTER_SECTIONS.length > 2 ? "lg:col-span-3" : "lg:col-span-6"} flex flex-col gap-5`}
+          >
             <Link
               href="/"
               className="w-fit hover:opacity-70 transition-opacity duration-200"

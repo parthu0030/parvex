@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import type { Photo } from "@/types";
 import { Container } from "@/components/ui/Container";
+import { InstagramLink } from "@/components/ui/InstagramLink";
 import { PHOTO_COLLECTIONS, collectionAnchor, getCollection, type PhotoCollectionKey } from "@/data/photography";
 import { useReveal, useRevealChildren } from "@/hooks/useReveal";
 import { CinematicGallery, JustifiedGallery, type OpenPhoto } from "@/components/photography/PhotoLayouts";
@@ -85,6 +86,7 @@ export function PhotographyPortfolio() {
               brand, product and event shoots for clients. Every photograph
               here was made by Parvex.
             </p>
+            <InstagramLink label="More photography on Instagram" />
           </div>
 
           <nav aria-label="Photography collections" className="lg:col-span-5 flex flex-col border-t border-white/10">
