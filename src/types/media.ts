@@ -25,4 +25,17 @@ export interface Video extends MediaItem {
   category?: string;
   /** Optional poster/still frame shown before playback (no autoplay, per design rules). */
   posterSrc?: string;
+  /** Display title (taken from the film's own on-screen title where it has one). */
+  title?: string;
+  /** Short description of what is actually visible in the film. */
+  description?: string;
+  /** Short, silent, low-bitrate loop played on hover (desktop only). */
+  previewSrc?: string;
+  /** Running time in seconds. */
+  duration?: number;
+  /** Pixel dimensions of the served file. */
+  width?: number;
+  height?: number;
+  /** Original file in /Videos (project root) this web version was made from. */
+  source?: string;
 }

@@ -17,7 +17,7 @@ export function CaseStudyChallenge({ project }: CaseStudyChallengeProps) {
           {/* Label */}
           <div data-reveal className="lg:col-span-3">
             <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B] lg:sticky lg:top-32">
-              Challenge
+              Problem
             </p>
           </div>
 

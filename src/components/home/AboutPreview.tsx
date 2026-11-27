@@ -25,7 +25,7 @@ const PRINCIPLES = [
  * AboutPreview — the thinking behind the studio, on the homepage.
  *
  * Deliberately text-led: the homepage introduces Parvex and its services,
- * while photography lives in the dedicated portfolio on /work#photography.
+ * while photography lives in the dedicated portfolio on /work/photography-showcase.
  */
 export function AboutPreview() {
   const textRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
@@ -72,7 +72,7 @@ export function AboutPreview() {
               {/* Always-present route to the photography portfolio, even if
                   the CMS has no featured projects to show below. */}
               <Link
-                href="/work#photography"
+                href="/work/photography-showcase"
                 className="group inline-flex items-center gap-1.5 text-[14px] font-medium text-white/80 hover:text-white"
               >
                 <span className="link-draw">See our photography</span>

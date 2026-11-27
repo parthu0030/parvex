@@ -10,6 +10,7 @@ import { getPublishedServices } from "@/lib/queries/services";
 import { getPageContent } from "@/lib/queries/content";
 import { prisma } from "@/lib/db/prisma";
 import { COMPANY, CONTACT_LINKS, REPOSITORY_URL, SITE_URL } from "@/data/company";
+import { ACTIVE_SOCIAL_LINKS } from "@/data/social";
 
 export const revalidate = 3600; // ISR fallback; Admin mutations explicitly revalidatePath() too
 
@@ -62,7 +63,7 @@ export default async function HomePage() {
             email,
             telephone: CONTACT_LINKS.phoneE164,
           },
-          sameAs: [REPOSITORY_URL],
+          sameAs: [...ACTIVE_SOCIAL_LINKS.map((s) => s.href), REPOSITORY_URL],
           logo: `${SITE_URL}/assets/logos/parvex-logo-full.png`,
           image: `${SITE_URL}/assets/logos/parvex-og-image.png`,
           slogan: COMPANY.tagline,
@@ -79,7 +80,7 @@ export default async function HomePage() {
       <StudioIntro />
       <ServicesPreview services={serviceViews} heading={content?.servicesHeading || undefined} />
       {/* Light → dark → light rhythm: About (dark) sits between Services and
-          Work. Photography lives in the portfolio at /work#photography. */}
+          Work. Photography lives in the portfolio at /work/photography-showcase. */}
       <AboutPreview />
       <ProjectsPreview projects={projectViews} heading={content?.selectedWorkHeading ?? undefined} />
       <CTASection
