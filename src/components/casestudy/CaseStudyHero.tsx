@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
 import type { CaseStudyProject } from "@/types";
+import { ProjectLinkButtons } from "@/components/casestudy/CaseStudyLinks";
 
 interface CaseStudyHeroProps {
   project: CaseStudyProject;
@@ -45,16 +46,24 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
           <span data-hero="h1-line" data-hero-delay="120">
             <span>{project.title}</span>
           </span>
+          {project.subtitle && (
+            <span data-hero="h1-line" data-hero-delay="180">
+              <span className="font-light italic text-[#6B6B6B]">{project.subtitle}</span>
+            </span>
+          )}
         </h1>
 
-        {/* Description */}
-        <p
+        {/* Description + links */}
+        <div
           data-hero="subtext"
           data-hero-delay="240"
-          className="text-base md:text-[18px] text-[#6B6B6B] leading-[1.7] max-w-[600px] tracking-[-0.01em] mb-14 md:mb-18"
+          className="flex flex-col gap-8 max-w-[640px] mb-14 md:mb-18"
         >
-          {project.description}
-        </p>
+          <p className="text-base md:text-[18px] text-[#6B6B6B] leading-[1.7] tracking-[-0.01em]">
+            {project.description}
+          </p>
+          <ProjectLinkButtons project={project} />
+        </div>
       </Container>
 
       {/* Cover image — full width below header text */}

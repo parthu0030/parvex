@@ -61,4 +61,18 @@ export interface CaseStudyProject extends Partial<SEOFields> {
 
   /** slug of next project, used for case-study navigation */
   nextProject: string;
+
+  /** Short positioning line shown under the title, e.g. "Financial Risk AI". */
+  subtitle?: string;
+  /** Deployed application. */
+  liveUrl?: string;
+  /** Public source repository. */
+  repoUrl?: string;
+  /** Implemented capabilities, each verified against the source code. */
+  features?: CaseStudyFeature[];
+}
+
+export interface CaseStudyFeature {
+  title: string;
+  detail: string;
 }

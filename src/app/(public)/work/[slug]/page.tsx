@@ -15,6 +15,10 @@ import { CaseStudyNavigation } from "@/components/casestudy/CaseStudyNavigation"
 import { CTASection } from "@/components/home/CTASection";
 import { buildPageMetadata } from "@/lib/seo";
 import { CaseStudyAnimationInit } from "@/components/casestudy/CaseStudyAnimationInit";
+import { CaseStudyFeatures } from "@/components/casestudy/CaseStudyFeatures";
+import { CaseStudyLinks } from "@/components/casestudy/CaseStudyLinks";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { SITE_URL } from "@/data/company";
 import { recordAnalyticsEvent } from "@/lib/analytics";
 
 interface PageProps {
@@ -81,17 +85,34 @@ export default async function CaseStudyPage({ params }: PageProps) {
     <>
       {/* Client-side animation initialiser — mounts hero + scroll reveals */}
       <CaseStudyAnimationInit />
+      {(project.liveUrl || project.repoUrl) && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: project.subtitle ? `${project.title} — ${project.subtitle}` : project.title,
+            description: project.description,
+            applicationCategory: "WebApplication",
+            operatingSystem: "Web",
+            url: project.liveUrl ?? `${SITE_URL}/work/${project.slug}`,
+            ...(project.repoUrl ? { sameAs: [project.repoUrl] } : {}),
+            creator: { "@type": "Organization", name: "Parvex", url: SITE_URL },
+          }}
+        />
+      )}
 
       {/* Storytelling order per Phase 3 spec */}
       <CaseStudyHero project={project} />
       <CaseStudyOverview project={project} />
       <CaseStudyChallenge project={project} />
       <CaseStudySolution project={project} />
+      <CaseStudyFeatures project={project} />
       {project.research && <CaseStudyResearch project={project} />}
       <CaseStudyDevelopment project={project} />
       <CaseStudyTechnology project={project} />
       <CaseStudyGallery project={project} />
       {project.results.length > 0 && <CaseStudyResults project={project} />}
+      <CaseStudyLinks project={project} />
       {next && (
         <CaseStudyNavigation
           nextProject={{

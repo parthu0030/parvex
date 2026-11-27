@@ -19,7 +19,8 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset-admin-password": "tsx prisma/reset-admin-password.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:sync-projects": "tsx prisma/sync-projects.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
