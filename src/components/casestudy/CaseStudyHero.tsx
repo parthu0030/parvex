@@ -6,16 +6,22 @@ import { ProjectLinkButtons } from "@/components/casestudy/CaseStudyLinks";
 
 interface CaseStudyHeroProps {
   project: CaseStudyProject;
+  /**
+   * Show the full-bleed cover image. Off for the Photography Showcase, where
+   * the portfolio itself follows immediately and the cover would repeat a
+   * photograph from it.
+   */
+  showCover?: boolean;
 }
 
 /**
  * CaseStudyHero — Full-bleed editorial header for individual project pages.
  * Mirrors the homepage Hero animation system via data-hero attributes.
  */
-export function CaseStudyHero({ project }: CaseStudyHeroProps) {
+export function CaseStudyHero({ project, showCover = true }: CaseStudyHeroProps) {
   return (
     <section
-      className="relative pt-[140px] pb-0 md:pt-[180px] bg-white overflow-hidden"
+      className={`relative pt-[140px] md:pt-[180px] bg-white overflow-hidden ${showCover ? "pb-0" : "pb-6 md:pb-10"}`}
       aria-label={`${project.title} case study hero`}
     >
       <Container>
@@ -67,20 +73,22 @@ export function CaseStudyHero({ project }: CaseStudyHeroProps) {
       </Container>
 
       {/* Cover image — full width below header text */}
-      <div
-        data-hero="image"
-        data-hero-delay="360"
-        className="relative mx-auto w-full max-w-[1600px] aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] bg-[#E8E8E8] overflow-hidden"
-      >
-        <Image
-          src={project.coverImage}
-          alt={project.coverImageAlt}
-          fill
-          priority
-          className={`object-cover object-center ${project.coverImage.includes("images.unsplash.com") ? "img-mono" : ""}`}
-          sizes="100vw"
-        />
-      </div>
+      {showCover && (
+        <div
+          data-hero="image"
+          data-hero-delay="360"
+          className="relative mx-auto w-full max-w-[1600px] aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] bg-[#E8E8E8] overflow-hidden"
+        >
+          <Image
+            src={project.coverImage}
+            alt={project.coverImageAlt}
+            fill
+            priority
+            className={`object-cover object-center ${project.coverImage.includes("images.unsplash.com") ? "img-mono" : ""}`}
+            sizes="100vw"
+          />
+        </div>
+      )}
     </section>
   );
 }

@@ -3,10 +3,11 @@
 import { useCallback, useRef, useState } from "react";
 import type { Photo } from "@/types";
 import { Container } from "@/components/ui/Container";
-import { PHOTO_COLLECTIONS, getCollection, type PhotoCollectionKey } from "@/data/photography";
+import { InstagramLink } from "@/components/ui/InstagramLink";
+import { PHOTO_COLLECTIONS, collectionAnchor, getCollection, type PhotoCollectionKey } from "@/data/photography";
 import { useReveal, useRevealChildren } from "@/hooks/useReveal";
-import { CinematicGallery, JustifiedGallery, type OpenPhoto } from "@/components/work/photography/PhotoLayouts";
-import { PhotoLightbox } from "@/components/work/photography/PhotoLightbox";
+import { CinematicGallery, JustifiedGallery, type OpenPhoto } from "@/components/photography/PhotoLayouts";
+import { PhotoLightbox } from "@/components/photography/PhotoLightbox";
 
 /** Desktop row rhythm per collection (row lengths). */
 const ROW_PATTERNS: Partial<Record<PhotoCollectionKey, number[]>> = {
@@ -23,17 +24,17 @@ const CINEMATIC_FOCUS: Record<string, string> = {
   "stage-performance": "center 80%",
 };
 
-const anchor = (key: string) => `photography-${key.toLowerCase()}`;
+const anchor = collectionAnchor;
 
 /**
- * WorkPhotography — the dedicated photography portfolio.
+ * PhotographyPortfolio — Parvex's complete photography portfolio.
  *
- * Dark, immersive section with three chapters that genuinely fit the work:
- * Landscape (including the frames that used to sit on the homepage),
- * Cinematic Frames and Editorial street portraits. Every frame opens in a
- * high-quality full-screen viewer.
+ * Lives on the Photography Showcase page (/work/photography-showcase). Dark,
+ * immersive section with three collections that genuinely fit the work:
+ * Landscape, Cinematic Frames and Editorial street portraits. Every frame
+ * keeps its caption and opens in a high-quality full-screen viewer.
  */
-export function WorkPhotography() {
+export function PhotographyPortfolio() {
   const headerRef = useReveal<HTMLDivElement>({ threshold: 0.1 });
   const [viewer, setViewer] = useState<{ title: string; photos: Photo[]; index: number } | null>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
@@ -58,7 +59,7 @@ export function WorkPhotography() {
 
   return (
     <section
-      id="photography"
+      id="portfolio"
       data-nav-theme="dark"
       className="scroll-mt-0 bg-[#0A0A0A] text-white py-24 md:py-32 lg:py-40"
       aria-labelledby="work-photography-heading"
@@ -85,6 +86,7 @@ export function WorkPhotography() {
               brand, product and event shoots for clients. Every photograph
               here was made by Parvex.
             </p>
+            <InstagramLink label="More photography on Instagram" />
           </div>
 
           <nav aria-label="Photography collections" className="lg:col-span-5 flex flex-col border-t border-white/10">

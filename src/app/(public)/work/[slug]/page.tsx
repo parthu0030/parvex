@@ -13,6 +13,10 @@ import { CaseStudyGallery } from "@/components/casestudy/CaseStudyGallery";
 import { CaseStudyResults } from "@/components/casestudy/CaseStudyResults";
 import { CaseStudyNavigation } from "@/components/casestudy/CaseStudyNavigation";
 import { CTASection } from "@/components/home/CTASection";
+import { PhotographyPortfolio } from "@/components/photography/PhotographyPortfolio";
+import { PHOTOGRAPHY_SHOWCASE_SLUG } from "@/data/photography";
+import { VideoPortfolio } from "@/components/videography/VideoPortfolio";
+import { VIDEOGRAPHY_SHOWCASE_SLUG } from "@/data/videography";
 import { buildPageMetadata } from "@/lib/seo";
 import { CaseStudyAnimationInit } from "@/components/casestudy/CaseStudyAnimationInit";
 import { CaseStudyFeatures } from "@/components/casestudy/CaseStudyFeatures";
@@ -77,6 +81,8 @@ export default async function CaseStudyPage({ params }: PageProps) {
     console.error("Error fetching adjacent projects in CaseStudyPage:", error);
   }
   const project = toCaseStudyProject(projectRecord, next?.slug ?? "");
+  const isPhotographyShowcase = project.slug === PHOTOGRAPHY_SHOWCASE_SLUG;
+  const isVideographyShowcase = project.slug === VIDEOGRAPHY_SHOWCASE_SLUG;
 
   // First-party analytics — never blocks rendering, never throws to the page.
   void recordAnalyticsEvent("PROJECT_VIEWED", projectRecord.id);
@@ -101,18 +107,53 @@ export default async function CaseStudyPage({ params }: PageProps) {
         />
       )}
 
-      {/* Storytelling order per Phase 3 spec */}
-      <CaseStudyHero project={project} />
-      <CaseStudyOverview project={project} />
-      <CaseStudyChallenge project={project} />
-      <CaseStudySolution project={project} />
-      <CaseStudyFeatures project={project} />
-      {project.research && <CaseStudyResearch project={project} />}
-      <CaseStudyDevelopment project={project} />
-      <CaseStudyTechnology project={project} />
-      <CaseStudyGallery project={project} />
-      {project.results.length > 0 && <CaseStudyResults project={project} />}
-      <CaseStudyLinks project={project} />
+      {isPhotographyShowcase ? (
+        <>
+          {/* Photography Showcase: the complete portfolio comes first, then
+              the write-up of how the portfolio was designed and built. The
+              cover and generic gallery are skipped — they would repeat
+              photographs that are already in the portfolio. */}
+          <CaseStudyHero project={project} showCover={false} />
+          <PhotographyPortfolio />
+          <CaseStudyOverview project={project} />
+          <CaseStudyChallenge project={project} />
+          <CaseStudySolution project={project} />
+          {project.research && <CaseStudyResearch project={project} />}
+          <CaseStudyDevelopment project={project} />
+          <CaseStudyTechnology project={project} />
+          {project.results.length > 0 && <CaseStudyResults project={project} />}
+        </>
+      ) : isVideographyShowcase ? (
+        <>
+          {/* Videography Showcase: the films come first, then the write-up of
+              how the video portfolio was designed and built. The stock cover
+              is skipped so the first moving image is Parvex's own work. */}
+          <CaseStudyHero project={project} showCover={false} />
+          <VideoPortfolio />
+          <CaseStudyOverview project={project} />
+          <CaseStudyChallenge project={project} />
+          <CaseStudySolution project={project} />
+          {project.research && <CaseStudyResearch project={project} />}
+          <CaseStudyDevelopment project={project} />
+          <CaseStudyTechnology project={project} />
+          {project.results.length > 0 && <CaseStudyResults project={project} />}
+        </>
+      ) : (
+        <>
+          {/* Storytelling order per Phase 3 spec */}
+          <CaseStudyHero project={project} />
+          <CaseStudyOverview project={project} />
+          <CaseStudyChallenge project={project} />
+          <CaseStudySolution project={project} />
+          <CaseStudyFeatures project={project} />
+          {project.research && <CaseStudyResearch project={project} />}
+          <CaseStudyDevelopment project={project} />
+          <CaseStudyTechnology project={project} />
+          <CaseStudyGallery project={project} />
+          {project.results.length > 0 && <CaseStudyResults project={project} />}
+          <CaseStudyLinks project={project} />
+        </>
+      )}
       {next && (
         <CaseStudyNavigation
           nextProject={{
