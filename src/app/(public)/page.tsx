@@ -80,7 +80,7 @@ export default async function HomePage() {
       <StudioIntro />
       <ServicesPreview services={serviceViews} heading={content?.servicesHeading || undefined} />
       {/* Light → dark → light rhythm: About (dark) sits between Services and
-          Work. Photography lives in the portfolio at /work#photography. */}
+          Work. Photography lives in the portfolio at /work/photography-showcase. */}
       <AboutPreview />
       <ProjectsPreview projects={projectViews} heading={content?.selectedWorkHeading ?? undefined} />
       <CTASection

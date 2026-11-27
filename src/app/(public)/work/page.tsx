@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { WorkHero } from "@/components/work/WorkHero";
 import { WorkGrid } from "@/components/work/WorkGrid";
-import { WorkPhotographyLink } from "@/components/work/WorkPhotographyLink";
 import { WorkVideography } from "@/components/work/WorkVideography";
 import { CTASection } from "@/components/home/CTASection";
 import { getPublishedProjects } from "@/lib/queries/projects";
@@ -42,8 +41,6 @@ export default async function WorkPage() {
     <>
       <WorkHero projectCount={workCards.length} />
       <WorkGrid projects={workCards} />
-      {/* Photography lives on /work/photography-showcase; this is a signpost. */}
-      <WorkPhotographyLink />
       <WorkVideography />
       <CTASection headline="Like what you see?" />
     </>

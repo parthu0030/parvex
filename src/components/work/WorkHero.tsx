@@ -5,7 +5,7 @@ import { useHeroAnimation } from "@/hooks/useHeroAnimation";
 
 const INDEX = [
   { label: "Case studies", href: "#all-work" },
-  { label: "Photography", href: "#photography" },
+  { label: "Photography", href: "/work/photography-showcase" },
   { label: "Film & motion", href: "#film" },
 ];
 
