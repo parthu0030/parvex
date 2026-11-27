@@ -14,7 +14,9 @@ export const IMAGERY = {
   webApps: { src: unsplash("photo-1551288049-bebda4e38f71"), alt: "Data-rich web application dashboard with charts" },
   uiux: { src: unsplash("photo-1581291518857-4e27b48ff24e"), alt: "Designer sketching interface wireframes by hand" },
   branding: { src: unsplash("photo-1561070791-2526d30994b5"), alt: "Brand colour swatches and identity studies laid out on a desk" },
-  videography: { src: unsplash("photo-1485846234645-a62644f84728"), alt: "Film slate held up before a take on location" },
+  // Local, edited copy of Unsplash photo-1485846234645: slate text changed to
+  // PROD "Artist", DIR "Parth Panchal", date 03/07/2006; monochrome baked in.
+  videography: { src: "/assets/videography/film-slate.jpg", alt: "Film slate marked “Artist”, “Parth Panchal” and 03/07/2006, held up before a take on location" },
   videoEditing: { src: unsplash("photo-1574717024653-61fd2cf4d44d"), alt: "Video edit timeline with layered tracks in post-production" },
   automation: { src: unsplash("photo-1531403009284-440f080d1e12"), alt: "Mapping an automated workflow on a whiteboard" },
   studioInterior: { src: unsplash("photo-1497366811353-6870744d04b2"), alt: "Quiet, modern studio interior with long work tables" },
