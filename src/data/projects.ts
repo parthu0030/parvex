@@ -25,10 +25,13 @@ export const PROJECTS: CaseStudyProject[] = [
     duration: "14 weeks",
     description:
       "An AI-assisted auditing workspace that reads large document sets, flags inconsistencies and explains every flag so reviewers stay in control.",
-    coverImage: "/assets/projects/auditgpt.png",
-    coverImageAlt: "AuditGPT compliance overview dashboard showing AI analysis flags and financial trends",
-    thumbnail: "/assets/projects/auditgpt.png",
-    thumbnailAlt: "AuditGPT AI audit log dashboard",
+    // Cover: interface composition of AuditGPT's real dashboard modules
+    // (Fraud Risk Score, Risk Breakdown, price history, Red Flags, AI summary)
+    // with placeholder data — the live dashboard sits behind sign-in.
+    coverImage: "/assets/projects/covers/auditgpt.jpg",
+    coverImageAlt: "AuditGPT risk dashboard with a fraud risk score of 34, price history chart, risk breakdown and red flags, shown with sample data",
+    thumbnail: "/assets/projects/covers/auditgpt.jpg",
+    thumbnailAlt: "AuditGPT financial risk dashboard",
     services: ["Product Strategy", "UI/UX Design", "Web Development", "AI Integration"],
     challenge:
       "Reviewing financial and regulatory documents by hand is slow, repetitive and easy to get wrong at scale. Every additional document adds review time, and there is rarely a clear record of why something was — or wasn't — flagged.",
@@ -67,10 +70,12 @@ export const PROJECTS: CaseStudyProject[] = [
     duration: "10 weeks",
     description:
       "Contextual candidate screening that matches resumes to roles by meaning, not keywords — and explains every ranking.",
-    coverImage: IMAGERY.analytics.src,
-    coverImageAlt: "Analytics dashboard on a laptop, representing candidate ranking and fit scores",
-    thumbnail: IMAGERY.analytics.src,
-    thumbnailAlt: "Resume Analyzer project cover",
+    // Cover: the live Ready4Hire app (ready4hire-app.vercel.app) — landing
+    // hero with its Resume Score panel layered on top.
+    coverImage: "/assets/projects/covers/resume-analyzer.jpg",
+    coverImageAlt: "The Ready4Hire web app: landing page with “Analyze my resume”, and a resume score panel rating keywords and readability",
+    thumbnail: "/assets/projects/covers/resume-analyzer.jpg",
+    thumbnailAlt: "Ready4Hire resume analysis app",
     services: ["Product Strategy", "UI/UX Design", "Web Development", "AI Integration"],
     challenge:
       "Keyword-based applicant tracking filters out strong candidates who describe the same experience in different words. 'Built distributed systems' and 'microservices architecture' mean much the same thing — a keyword filter treats them as unrelated.",
@@ -108,10 +113,12 @@ export const PROJECTS: CaseStudyProject[] = [
     duration: "8 weeks",
     description:
       "A booking flow rebuilt around one fast seat-map interaction — from showtime to confirmation without the usual detours.",
-    coverImage: "/assets/projects/movie-ticket-mono.jpg",
-    coverImageAlt: "Rows of cinema seats facing the screen",
-    thumbnail: "/assets/projects/movie-ticket-mono.jpg",
-    thumbnailAlt: "Movie Ticket Booking project cover",
+    // Cover: the live QuickShow booking app's home page on a cinema screen,
+    // above rows of theatre seats.
+    coverImage: "/assets/projects/covers/movie-ticket.jpg",
+    coverImageAlt: "The QuickShow movie booking app shown on a cinema screen above rows of theatre seats",
+    thumbnail: "/assets/projects/covers/movie-ticket.jpg",
+    thumbnailAlt: "QuickShow movie ticket booking app on a cinema screen",
     services: ["UI/UX Design", "Web Development", "Payment Integration"],
     challenge:
       "Typical booking flows hide seat selection behind registration screens and repeated confirmations. The friction lands right before payment — exactly where it costs the most — and gets worse on busy release days.",
