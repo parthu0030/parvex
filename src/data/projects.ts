@@ -168,12 +168,9 @@ export const PROJECTS: CaseStudyProject[] = [
       { name: "Tailwind CSS", category: "Frontend" },
       { name: "Next/Image", category: "Media" },
     ],
-    gallery: [
-      { src: getPhoto("landscape-range").src, alt: getPhoto("landscape-range").alt, aspect: "landscape" },
-      { src: getPhoto("street-sculptor").src, alt: getPhoto("street-sculptor").alt, aspect: "portrait" },
-      { src: getPhoto("landscape-observatory").src, alt: getPhoto("landscape-observatory").alt, aspect: "portrait" },
-      { src: getPhoto("street-mother").src, alt: getPhoto("street-mother").alt, aspect: "portrait" },
-    ],
+    // The full portfolio renders on this page (PhotographyPortfolio), so a
+    // separate gallery would only repeat photographs.
+    gallery: [],
     results: [
       { metric: "Curated", value: "Three collections", description: "Landscape, Cinematic Frames and Editorial, sequenced as a single monochrome body of work." },
       { metric: "Lightweight", value: "Web-sized exports", description: "Camera originals are never sent to visitors." },

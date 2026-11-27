@@ -43,6 +43,13 @@ export const PHOTO_COLLECTIONS = [
 
 export type PhotoCollectionKey = (typeof PHOTO_COLLECTIONS)[number]["key"];
 
+/** The Photography Showcase case study is the home of the full portfolio. */
+export const PHOTOGRAPHY_SHOWCASE_SLUG = "photography-showcase";
+export const PHOTOGRAPHY_SHOWCASE_PATH = `/work/${PHOTOGRAPHY_SHOWCASE_SLUG}`;
+
+/** In-page anchor for a collection on the Photography Showcase page. */
+export const collectionAnchor = (key: string) => `photography-${key.toLowerCase()}`;
+
 const L = { width: 2400, height: 1800, aspect: "landscape" as const };
 const P = { width: 1800, height: 2400, aspect: "portrait" as const };
 

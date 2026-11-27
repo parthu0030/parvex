@@ -35,7 +35,9 @@ export function useSmoothScroll() {
         top: Math.max(0, targetTop),
         behavior: prefersReduced ? "auto" : "smooth",
       });
-    }, 100);
+    }, prefersReduced ? 100 : 650);
+    // ↑ Wait for PageTransition's entrance (550ms) to finish: measuring while
+    // the page is still translated 28px lands anchors under the header.
 
     return () => clearTimeout(timer);
   }, [pathname]);

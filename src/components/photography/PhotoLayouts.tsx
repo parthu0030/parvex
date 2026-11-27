@@ -20,7 +20,7 @@ function toRows(photos: Photo[], pattern: number[]): Photo[][] {
   return rows;
 }
 
-/** Phones: landscapes get a row each, portraits pair up. */
+/** Phones and tablets (< 1024px): landscapes get a row each, portraits pair up. */
 function toMobileRows(photos: Photo[]): Photo[][] {
   const rows: Photo[][] = [];
   let pending: Photo | null = null;
@@ -115,7 +115,7 @@ export function JustifiedGallery({ photos, pattern, onOpen }: JustifiedProps) {
   const renderRows = (rows: Photo[][], mobile: boolean) => {
     const order = rows.flat();
     return (
-      <div className={cn("flex-col gap-2 md:gap-4", mobile ? "flex md:hidden" : "hidden md:flex")}>
+      <div className={cn("flex-col gap-2 md:gap-4", mobile ? "flex lg:hidden" : "hidden lg:flex")}>
         {rows.map((row, r) => (
           <div key={r} data-reveal-child className="flex gap-2 md:gap-4">
             {row.map((p) => {
