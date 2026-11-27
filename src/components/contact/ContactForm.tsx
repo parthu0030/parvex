@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
@@ -51,6 +51,14 @@ function LargeOptionButton({
 
 const TOTAL_STEPS = 4;
 
+const SUBMIT_FAILED = `Something went wrong while submitting your enquiry. Please try again or contact us directly at ${COMPANY.email}.`;
+
+function newSubmissionId(): string {
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
 export function ContactForm({ initialProjectType }: { initialProjectType?: string } = {}) {
   const revealRef = useReveal<HTMLDivElement>({ threshold: 0.08 });
   const [isPending, startTransition] = useTransition();
@@ -62,6 +70,10 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
   
   const [step, setStep] = useState(1);
   const [animating, setAnimating] = useState(false);
+  // One id per enquiry: retries of the same enquiry reuse it, so the server
+  // never emails the same submission twice. A fresh id after each success.
+  const [submissionId, setSubmissionId] = useState(newSubmissionId);
+  const submittingRef = useRef(false);
 
   const {
     register,
@@ -157,8 +169,12 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
   };
 
   const onSubmit = (data: ContactFormData) => {
+    // Ignore extra clicks while an enquiry is already being sent.
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setServerError(null);
     const formData = new FormData();
+    formData.append("submissionId", submissionId);
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) formData.append(key, value);
     });
@@ -172,13 +188,15 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
         result = await submitContactForm({ status: "idle" }, formData);
       } catch {
         // Network failure, an oversized request or a server crash: the
-        // enquiry never arrived, so say so and offer a direct route.
-        setServerError(`Sorry — we couldn't send your message. Please try again, or email us at ${COMPANY.email}.`);
-        return;
+        // enquiry may not have arrived, so say so and offer a direct route.
+        result = { status: "error", message: SUBMIT_FAILED };
+      } finally {
+        submittingRef.current = false;
       }
       if (result.status === "success") {
         setSubmitted(true);
         setAttachment(null);
+        setSubmissionId(newSubmissionId());
         reset();
         setStep(1);
       } else if (result.status === "error") {
@@ -196,11 +214,11 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
               <Check size={26} className="text-white" strokeWidth={2.5} />
             </div>
             <h2 className="font-semibold tracking-tight text-3xl md:text-[36px] text-[#0A0A0A]">
-              Message sent.
+              Enquiry received.
             </h2>
             <p className="text-[16px] text-[#6B6B6B] leading-[1.7]">
-              Thanks for reaching out — we read every message ourselves and
-              reply within one working day.
+              Your project enquiry has been received. Thank you for reaching out
+              to Parvex. We&apos;ll review your requirements and get back to you soon.
             </p>
             <Button
               variant="secondary"
@@ -533,6 +551,7 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
                 <button
                   type="button"
                   onClick={() => changeStep(step - 1)}
+                  disabled={isPending}
                   className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#0A0A0A] transition-colors font-medium text-[16px] py-2"
                 >
                   <ArrowLeft size={18} />

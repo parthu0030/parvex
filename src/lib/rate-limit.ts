@@ -30,3 +30,9 @@ export function rateLimit(
   bucket.count += 1;
   return { allowed: true, remaining: limit - bucket.count };
 }
+
+/** Give back one use, e.g. when a request failed for a reason that wasn't the visitor's fault. */
+export function refundRateLimit(key: string): void {
+  const bucket = buckets.get(key);
+  if (bucket && bucket.count > 0) bucket.count -= 1;
+}
