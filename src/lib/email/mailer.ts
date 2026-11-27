@@ -78,7 +78,8 @@ function smtp(): Transporter {
       secure,
       // On 587, refuse to authenticate unless the connection is upgraded to TLS.
       requireTLS: !secure,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      // Google shows App Passwords in groups of four ("abcd efgh …"); drop the spaces.
+      auth: { user: process.env.SMTP_USER?.trim(), pass: process.env.SMTP_PASS?.replace(/\s+/g, "") },
       connectionTimeout: 10_000,
       greetingTimeout: 10_000,
       socketTimeout: 20_000,
