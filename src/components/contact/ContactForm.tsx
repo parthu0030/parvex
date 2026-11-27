@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { useReveal } from "@/hooks/useReveal";
 import { submitContactForm } from "@/app/(public)/contact/actions";
+import { COMPANY } from "@/data/company";
 import {
   contactFormSchema,
   PROJECT_TYPES,
@@ -107,8 +108,8 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
 
   const validateAndSetFile = (file: File) => {
     setAttachmentError(null);
-    if (file.size > 10 * 1024 * 1024) {
-      setAttachmentError("The attached file exceeds the maximum 10 MB size limit.");
+    if (file.size > 4 * 1024 * 1024) {
+      setAttachmentError("The attached file exceeds the maximum 4 MB size limit.");
       return;
     }
     const fileName = file.name.toLowerCase();
@@ -166,7 +167,15 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
     }
 
     startTransition(async () => {
-      const result = await submitContactForm({ status: "idle" }, formData);
+      let result: Awaited<ReturnType<typeof submitContactForm>>;
+      try {
+        result = await submitContactForm({ status: "idle" }, formData);
+      } catch {
+        // Network failure, an oversized request or a server crash: the
+        // enquiry never arrived, so say so and offer a direct route.
+        setServerError(`Sorry — we couldn't send your message. Please try again, or email us at ${COMPANY.email}.`);
+        return;
+      }
       if (result.status === "success") {
         setSubmitted(true);
         setAttachment(null);
@@ -418,7 +427,7 @@ export function ContactForm({ initialProjectType }: { initialProjectType?: strin
                             Drag and drop your file here, or <span className="underline">browse</span>
                           </p>
                           <p className="text-[14px] text-[#6B6B6B]">
-                            Share a brief, wireframe, reference, or project document. Max 10 MB.
+                            Share a brief, wireframe, reference, or project document. Max 4 MB.
                           </p>
                         </div>
                       )}

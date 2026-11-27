@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getPublishedProjects } from "@/lib/queries/projects";
+import { SITE_URL } from "@/data/company";
 
-const BASE_URL = "https://parvex.in";
+const BASE_URL = SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects = await getPublishedProjects();

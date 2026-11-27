@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { SITE_URL } from "@/data/company";
 
 // ROOT LAYOUT — truly global document concerns only.
 //
@@ -9,7 +10,7 @@ import "./globals.css";
 // This file must stay minimal so neither experience leaks into the other.
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://parvex.in"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Parvex — Creative Technology Studio",
     template: "%s — Parvex",

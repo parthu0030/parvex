@@ -28,6 +28,13 @@ const nextConfig: NextConfig = {
     // errors for specific Unsplash images, add `unoptimized` on that
     // individual <Image> component instead of disabling it globally.
   },
+  experimental: {
+    serverActions: {
+      // Contact form attachments (max 4 MB, see media-service.ts) plus the
+      // form fields. Next's default is 1 MB; Vercel caps requests at 4.5 MB.
+      bodySizeLimit: "4.5mb",
+    },
+  },
   allowedDevOrigins: ["*.trycloudflare.com", "192.168.29.112"],
 };
 

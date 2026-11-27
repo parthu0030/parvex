@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { PageTransition } from "@/components/ui/PageTransition";
+import { SITE_URL } from "@/data/company";
 
 // PUBLIC LAYOUT — owns the entire approved public experience.
 // Nothing here may run inside /admin. Do not add Admin concerns to this file.
@@ -25,11 +26,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Parvex" }],
   creator: "Parvex",
-  alternates: { canonical: "https://parvex.in" },
+  alternates: { canonical: SITE_URL },
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://parvex.in",
+    url: SITE_URL,
     siteName: "Parvex",
     title: "Parvex — Creative Technology Studio",
     description: DESCRIPTION,

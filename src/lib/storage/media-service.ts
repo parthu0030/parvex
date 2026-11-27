@@ -13,7 +13,10 @@ const ALLOWED_DOCUMENT_TYPES = [
   "application/x-zip-compressed",
 ];
 
-const MAX_BYTES = 10 * 1024 * 1024; // 10 MB — matches Contact attachment limit
+// 4 MB — Vercel caps a request body at 4.5 MB, and the contact form sends the
+// file with the rest of the form. Matches the limit in ContactForm and
+// serverActions.bodySizeLimit in next.config.ts.
+const MAX_BYTES = 4 * 1024 * 1024;
 
 export function classifyMime(mimeType: string): {
   mediaType: MediaType;
@@ -27,7 +30,7 @@ export function classifyMime(mimeType: string): {
 
 export function assertValidFile(file: { size: number; type: string; name: string }) {
   if (file.size <= 0) throw new Error("The uploaded file is empty.");
-  if (file.size > MAX_BYTES) throw new Error("Files must be 10 MB or smaller.");
+  if (file.size > MAX_BYTES) throw new Error("Files must be 4 MB or smaller.");
   // Do not trust extension alone — classifyMime validates the real MIME type.
   classifyMime(file.type);
   if (!file.name || file.name.length > 200) throw new Error("Invalid filename.");

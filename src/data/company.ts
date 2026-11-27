@@ -26,5 +26,41 @@ export const CONTACT_LINKS = {
   )}`,
 } as const;
 
-export const SITE_URL = "https://parvex.in";
+/** The live address, used when nothing better is configured. */
+const DEFAULT_SITE_URL = "https://parvex-mocha.vercel.app";
+
+/** "example.com/" or "https://example.com/" → "https://example.com"; null if unusable. */
+function toOrigin(value: string | undefined, { allowLocal }: { allowLocal: boolean }): string | null {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+  try {
+    const url = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`);
+    if (!allowLocal && /^(localhost|127\.0\.0\.1|\[::1\])$/.test(url.hostname)) return null;
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The site's public origin, used for canonical URLs, the sitemap, Open Graph
+ * images and structured data. Fixed at build time, so a change takes effect on
+ * the next deploy. In order:
+ * 1. `NEXT_PUBLIC_SITE_URL`, when it is set to a real (non-localhost) address.
+ * 2. Vercel's production domain (`NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL`,
+ *    set automatically on Vercel). It becomes a custom domain such as
+ *    parvex.in once that domain is added to the Vercel project.
+ * 3. The current live address.
+ */
+function resolveSiteUrl(): string {
+  return (
+    toOrigin(process.env.NEXT_PUBLIC_SITE_URL, { allowLocal: false }) ??
+    toOrigin(process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL, {
+      allowLocal: false,
+    }) ??
+    DEFAULT_SITE_URL
+  );
+}
+
+export const SITE_URL = resolveSiteUrl();
 export const REPOSITORY_URL = "https://github.com/parthu0030/parvex";
