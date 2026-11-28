@@ -10,7 +10,7 @@ import { SITE_URL } from "@/data/company";
 // Nothing here may run inside /admin. Do not add Admin concerns to this file.
 
 const DESCRIPTION =
-  "A creative technology studio for websites, web applications, UI/UX, branding, photography, videography, video editing and AI automation.";
+  "A creative technology studio for websites, web applications, UI/UX, branding, photography, videography and video editing.";
 
 export const metadata: Metadata = {
   keywords: [
@@ -22,7 +22,6 @@ export const metadata: Metadata = {
     "photography",
     "videography",
     "video editing",
-    "AI automation",
   ],
   authors: [{ name: "Parvex" }],
   creator: "Parvex",

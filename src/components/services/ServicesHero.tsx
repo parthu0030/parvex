@@ -42,7 +42,7 @@ export function ServicesHero({ services }: { services: { slug: string; title: st
               data-hero-delay="320"
               className="text-base md:text-[18px] text-[#6B6B6B] leading-[1.7] max-w-[560px] tracking-[-0.01em]"
             >
-              We design, build, shoot and automate — so nothing about how your
+              We design, build, shoot and edit — so nothing about how your
               brand looks or works feels like it came from a different team.
               Pick one service or bring us the whole problem.
             </p>

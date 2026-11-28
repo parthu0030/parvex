@@ -1,6 +1,6 @@
 import type { Service, ServicePresentation } from "@/types";
 import { IMAGERY } from "./imagery";
-import { getPhoto, STAGE_PHOTO } from "./photography";
+import { getPhoto } from "./photography";
 
 /**
  * PARVEX — service catalogue.
@@ -116,24 +116,9 @@ export const SERVICES: Service[] = [
     keywords: ["video editing", "colour grading", "content editing"],
   },
   {
-    id: "ai-automation",
-    slug: "ai-automation",
-    number: "08",
-    title: "AI Automation",
-    description:
-      "Practical AI and automation that removes repetitive work from your operations — not a gimmick on top of it.",
-    longDescription:
-      "We identify where time is being lost, then design and build automations, AI assistants and document workflows with the guardrails needed to trust them in daily use.",
-    deliverables: ["Workflow audit & feasibility", "LLM and API integration", "Document & data automation", "Evaluation and guardrails"],
-    outcome: "Hours back every week, with outputs you can verify.",
-    metaTitle: "AI Automation",
-    metaDescription: "AI automation, LLM integration and workflow tooling for growing businesses.",
-    keywords: ["AI automation", "LLM integration", "workflow automation"],
-  },
-  {
     id: "creative-technology",
     slug: "creative-technology",
-    number: "09",
+    number: "08",
     title: "Creative Technology Solutions",
     description:
       "Ideas that need both a designer and an engineer in the room — interactive experiences, tools and prototypes.",
@@ -182,7 +167,7 @@ const PRESENTATION: Record<string, ServicePresentation> = {
     discipline: "Brand & Visual",
     idealFor: "Launches, events and brands ready to tell their story in motion.",
     tags: ["Brand film", "Events", "Social"],
-    image: { src: STAGE_PHOTO.src, alt: "Parvex photograph of a live stage performance in haze and spotlight", mono: STAGE_PHOTO.mono },
+    image: { src: "/assets/services/videography-shoot.jpg", alt: "Parvex crew filming a dancer on a white studio set", mono: true },
   },
   "video-editing": {
     discipline: "Brand & Visual",
@@ -190,14 +175,8 @@ const PRESENTATION: Record<string, ServicePresentation> = {
     tags: ["Edit", "Colour", "Sound"],
     image: IMAGERY.videoEditing,
   },
-  "ai-automation": {
-    discipline: "Intelligent Systems",
-    idealFor: "Operations-heavy teams buried in documents, data entry and manual hand-offs.",
-    tags: ["LLMs", "Workflows", "Integrations"],
-    image: IMAGERY.automation,
-  },
   "creative-technology": {
-    discipline: "Intelligent Systems",
+    discipline: "Creative Technology",
     idealFor: "Agencies, brands and founders with an unconventional brief.",
     tags: ["Interactive", "Prototypes", "Tools"],
     image: { src: getPhoto("landscape-observatory").src, alt: "Parvex photograph of a high-altitude observatory under storm clouds" },
@@ -209,8 +188,13 @@ const PRESENTATION: Record<string, ServicePresentation> = {
 const LEGACY_ALIASES: Record<string, string> = {
   "web-development": "website-design-development",
   "app-development": "web-applications",
-  "ai-products": "ai-automation",
+  // AI Automation was retired as a service; old links land on Web Applications.
+  "ai-products": "web-applications",
+  "ai-automation": "web-applications",
 };
+
+/** Services that are no longer offered; hidden even if the database still has them. */
+export const RETIRED_SERVICE_SLUGS = ["ai-automation", "ai-products"];
 
 export function getServicePresentation(slug: string): ServicePresentation {
   return (
@@ -227,5 +211,5 @@ export function getServicePresentation(slug: string): ServicePresentation {
 export const SERVICE_DISCIPLINES: { name: ServicePresentation["discipline"]; summary: string }[] = [
   { name: "Digital Products", summary: "Websites, applications and interfaces engineered to perform." },
   { name: "Brand & Visual", summary: "Identity, photography and film that give a brand presence." },
-  { name: "Intelligent Systems", summary: "Automation and creative technology that do the heavy lifting." },
+  { name: "Creative Technology", summary: "Interactive experiences, prototypes and custom tools where design meets code." },
 ];

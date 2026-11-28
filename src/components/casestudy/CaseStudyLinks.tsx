@@ -47,6 +47,16 @@ export function ProjectLinkButtons({
   );
 }
 
+/** Lets a long address wrap only after "." "/" or "-" — never mid-word. */
+function breakable(text: string) {
+  return text.split(/(?<=[./-])/).map((part, i) => (
+    <span key={i}>
+      {i > 0 && <wbr />}
+      {part}
+    </span>
+  ));
+}
+
 /**
  * CaseStudyLinks — closing "see it in action" block with both links and
  * their addresses, so visitors know exactly where they're going.
@@ -69,15 +79,15 @@ export function CaseStudyLinks({ project }: { project: CaseStudyProject }) {
           </div>
           <dl data-reveal className="lg:col-span-5 flex flex-col border-t border-[#E8E8E8]">
             {project.liveUrl && (
-              <div className="flex items-baseline justify-between gap-6 py-4 border-b border-[#E8E8E8]">
+              <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 py-4 border-b border-[#E8E8E8]">
                 <dt className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B]">Live</dt>
-                <dd className="text-[14px] text-[#0A0A0A] text-right break-all">{host(project.liveUrl)}</dd>
+                <dd className="text-[14px] text-[#0A0A0A] sm:text-right">{breakable(host(project.liveUrl))}</dd>
               </div>
             )}
             {project.repoUrl && (
-              <div className="flex items-baseline justify-between gap-6 py-4 border-b border-[#E8E8E8]">
+              <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 py-4 border-b border-[#E8E8E8]">
                 <dt className="text-[11px] font-semibold tracking-[0.14em] uppercase text-[#6B6B6B]">Source</dt>
-                <dd className="text-[14px] text-[#0A0A0A] text-right break-all">{host(project.repoUrl)}</dd>
+                <dd className="text-[14px] text-[#0A0A0A] sm:text-right">{breakable(host(project.repoUrl))}</dd>
               </div>
             )}
           </dl>

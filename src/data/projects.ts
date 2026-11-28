@@ -1,6 +1,4 @@
 import type { CaseStudyProject } from "@/types";
-import { IMAGERY } from "./imagery";
-import { getPhoto } from "./photography";
 
 /**
  * PARVEX — master project data store (static fallback + CMS seed source).
@@ -32,9 +30,9 @@ export const PROJECTS: CaseStudyProject[] = [
     // Cover: interface composition of AuditGPT's real dashboard modules
     // (Fraud Risk Score, Risk Breakdown, price history, Red Flags, AI summary)
     // with placeholder data — the live dashboard sits behind sign-in.
-    coverImage: "/assets/projects/covers/auditgpt.jpg",
+    coverImage: "/assets/projects/covers/auditgpt-v2.jpg",
     coverImageAlt: "AuditGPT risk dashboard with a fraud risk score of 34, price history chart, risk breakdown and red flags, shown with sample data",
-    thumbnail: "/assets/projects/covers/auditgpt.jpg",
+    thumbnail: "/assets/projects/covers/auditgpt-v2.jpg",
     thumbnailAlt: "AuditGPT financial risk dashboard",
     liveUrl: "https://auditgpt-financial-risk-ai-yylt.vercel.app/login",
     repoUrl: "https://github.com/parthu0030/auditgpt-financial-risk-ai",
@@ -96,9 +94,9 @@ export const PROJECTS: CaseStudyProject[] = [
     // Cover: the live Ready4Hire app (ready4hire-app.vercel.app) — landing
     // hero (cropped above its placeholder stat tiles) with the real
     // How It Works workflow layered on top.
-    coverImage: "/assets/projects/covers/resume-analyzer.jpg",
+    coverImage: "/assets/projects/covers/resume-analyzer-v2.jpg",
     coverImageAlt: "The Ready4Hire web app: landing page with “Analyze my resume”, and its workflow — sign up, upload resume, AI analysis, data storage",
-    thumbnail: "/assets/projects/covers/resume-analyzer.jpg",
+    thumbnail: "/assets/projects/covers/resume-analyzer-v2.jpg",
     thumbnailAlt: "Ready4Hire resume analysis app",
     liveUrl: "https://ready4hire-app.vercel.app",
     repoUrl: "https://github.com/parthu0030/Ready4Hire",
@@ -157,9 +155,9 @@ export const PROJECTS: CaseStudyProject[] = [
       "QuickShow, a full-stack cinema booking app: browse what's showing, pick a theatre, date and showtime, choose seats on a map that blocks seats already taken, and check out in three steps — with every booking saved to your profile.",
     // Cover: the live QuickShow booking app's home page on a cinema screen,
     // above rows of theatre seats.
-    coverImage: "/assets/projects/covers/movie-ticket.jpg",
+    coverImage: "/assets/projects/covers/movie-ticket-v2.jpg",
     coverImageAlt: "The QuickShow movie booking app shown on a cinema screen above rows of theatre seats",
-    thumbnail: "/assets/projects/covers/movie-ticket.jpg",
+    thumbnail: "/assets/projects/covers/movie-ticket-v2.jpg",
     thumbnailAlt: "QuickShow movie ticket booking app on a cinema screen",
     liveUrl: "https://movie-ticket-booking-liart-beta.vercel.app",
     repoUrl: "https://github.com/parthu0030/MovieTicketBooking",
@@ -208,10 +206,10 @@ export const PROJECTS: CaseStudyProject[] = [
     duration: "6 weeks",
     description:
       "An editorial portfolio system for Parvex's own photography — designed so the images lead and the interface steps back.",
-    coverImage: getPhoto("landscape-peak").src,
-    coverImageAlt: getPhoto("landscape-peak").alt,
-    thumbnail: getPhoto("landscape-peak").src,
-    thumbnailAlt: "Photography Showcase cover — a lone snow peak above cloud",
+    coverImage: "/assets/projects/covers/photography-showcase-v2.jpg",
+    coverImageAlt: "Parvex photograph of a Ladakh river valley — braided river, switchback roads and red-brown mountains under cloud",
+    thumbnail: "/assets/projects/covers/photography-showcase-v2.jpg",
+    thumbnailAlt: "Photography Showcase cover — a Ladakh river valley in natural colour",
     services: ["Creative Direction", "Photography", "UI/UX Design", "Web Development"],
     challenge:
       "Photography portfolios usually fail in one of two ways: so bare the images lose context, or so designed that the interface competes with the work. Our own landscape, cinematic and street work needed a home that felt as considered as the photographs.",
@@ -242,16 +240,16 @@ export const PROJECTS: CaseStudyProject[] = [
     slug: "videography-showcase",
     title: "Videography Showcase",
     category: "Creative / Videography",
-    year: "2024",
+    year: "2026",
     client: "Parvex studio",
-    status: "Concept",
-    duration: "In development",
+    status: "Live",
+    duration: "",
     description:
-      "A video portfolio concept built to load instantly and present film work without third-party players getting in the way.",
-    coverImage: IMAGERY.videography.src,
-    coverImageAlt: IMAGERY.videography.alt,
-    thumbnail: IMAGERY.videography.src,
-    thumbnailAlt: "Videography Showcase concept cover — a film slate on set",
+      "A video portfolio built to load instantly and present film work without third-party players getting in the way.",
+    coverImage: "/assets/projects/covers/videography-showcase-v3.jpg",
+    coverImageAlt: "Three stills from Parvex films: a crew filming a dancer in a white studio, a camera operator framing a shot, and musicians at Navratri Nights",
+    thumbnail: "/assets/projects/covers/videography-showcase-v3.jpg",
+    thumbnailAlt: "Videography Showcase cover — stills from three Parvex films",
     services: ["Creative Direction", "UI/UX Design", "Web Development", "Video Optimization"],
     challenge:
       "Video portfolios are hard to get right on the web: heavy files, unreliable autoplay and embedded players that break the visual language of the site.",

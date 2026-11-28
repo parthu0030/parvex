@@ -13,7 +13,6 @@ export const INQUIRY_OPTIONS = [
   { value: "photography", label: "Photography" },
   { value: "videography", label: "Videography" },
   { value: "video-editing", label: "Video Editing" },
-  { value: "ai-automation", label: "AI Automation" },
   { value: "something-else", label: "Something Else" },
 ] as const;
 
@@ -26,7 +25,9 @@ const SERVICE_SLUG_TO_INQUIRY: Record<string, string> = {
   "web-applications": "web-application",
   "app-development": "web-application",
   "branding-digital-experiences": "branding",
-  "ai-products": "ai-automation",
+  // AI Automation is no longer offered; old links fall back to Web Application.
+  "ai-products": "web-application",
+  "ai-automation": "web-application",
   "creative-technology": "something-else",
 };
 

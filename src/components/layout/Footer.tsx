@@ -33,7 +33,7 @@ export function Footer() {
             </Link>
             <p className="text-[14px] text-white/45 leading-[1.7] max-w-[320px]">
               A creative technology studio designing and building websites,
-              applications, automation, photography and film.
+              applications, brands, photography and film.
             </p>
             <ul className="flex flex-col gap-2.5">
               <li>

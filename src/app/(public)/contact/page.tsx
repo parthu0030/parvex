@@ -8,7 +8,7 @@ import { resolveInquiryLabel } from "@/lib/validations/contact";
 export const metadata: Metadata = buildPageMetadata({
   title: "Contact",
   description:
-    "Start a project with Parvex. Tell us about your website, application, brand, shoot or automation idea — we reply within one working day.",
+    "Start a project with Parvex. Tell us about your website, application, brand, shoot or film — we reply within one working day.",
   path: "/contact",
 });
 

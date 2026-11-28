@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s — Parvex",
   },
   description:
-    "Parvex is a creative technology studio designing and building websites, web applications and AI automation, with photography, videography and video editing in-house.",
+    "Parvex is a creative technology studio designing and building websites and web applications, with photography, videography and video editing in-house.",
   applicationName: "Parvex",
 };
 

@@ -25,8 +25,8 @@ export const FOOTER_SECTIONS: FooterSection[] = [
       { label: "Websites", href: "/services#website-design-development" },
       { label: "Web Applications", href: "/services#web-applications" },
       { label: "UI/UX Design", href: "/services#ui-ux-design" },
+      { label: "Branding", href: "/services#branding-digital-experiences" },
       { label: "Photography & Film", href: "/services#photography" },
-      { label: "AI Automation", href: "/services#ai-automation" },
     ],
   },
   ...(ACTIVE_SOCIAL_LINKS.length > 0

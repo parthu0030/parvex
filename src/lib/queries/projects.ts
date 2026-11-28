@@ -240,7 +240,8 @@ export async function getAdjacentProjects(
     const index = published.findIndex((p) => p.slug === currentSlug);
     if (index === -1) return { next: null, previous: null };
 
-    const next = index < published.length - 1 ? (published[index + 1] ?? null) : null;
+    // The last project wraps to the first, so every case study has a next one.
+    const next = published.length > 1 ? (published[(index + 1) % published.length] ?? null) : null;
     const previous = index > 0 ? (published[index - 1] ?? null) : null;
 
     return { next, previous };
@@ -250,7 +251,7 @@ export async function getAdjacentProjects(
     const index = published.findIndex((p) => p.slug === currentSlug);
 
     return {
-      next: index >= 0 && index < published.length - 1 ? (published[index + 1] ?? null) : null,
+      next: index >= 0 && published.length > 1 ? (published[(index + 1) % published.length] ?? null) : null,
       previous: index > 0 ? (published[index - 1] ?? null) : null,
     };
   }

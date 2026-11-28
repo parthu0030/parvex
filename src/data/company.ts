@@ -6,7 +6,7 @@ export const COMPANY: Company = {
   legalName: "Parvex",
   tagline: "Creative Technology Studio",
   description:
-    "Parvex is a creative technology studio. We design and build websites, web applications and AI automation, and produce photography and film — one team holding craft and code to the same standard.",
+    "Parvex is a creative technology studio. We design and build websites and web applications, and produce photography and film — one team holding craft and code to the same standard.",
   email: "parvex3303@gmail.com",
   phone: "+91 79900 32648",
   founded: "2024",

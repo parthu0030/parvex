@@ -64,8 +64,16 @@ export function ProjectsPreview({
             ref={gridRef}
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-14 mt-20 md:mt-28 pt-14 md:pt-16 border-t border-[#E8E8E8]"
           >
-            {rest.map((project) => (
-              <div key={project.slug} data-reveal-child>
+            {rest.map((project, i) => (
+              <div
+                key={project.slug}
+                data-reveal-child
+                className={
+                  rest.length % 2 === 1 && i === rest.length - 1
+                    ? "md:col-span-2 md:w-[calc(50%-12px)] md:mx-auto xl:col-span-1 xl:w-auto xl:mx-0"
+                    : undefined
+                }
+              >
                 <ProjectTile project={project} />
               </div>
             ))}

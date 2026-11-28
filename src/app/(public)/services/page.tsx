@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: content?.metaTitle ?? "Services",
     description:
       content?.metaDescription ??
-      "Website design and development, web applications, UI/UX, branding, photography, videography, video editing and AI automation — from one creative technology studio.",
+      "Website design and development, web applications, UI/UX, branding, photography, videography and video editing — from one creative technology studio.",
     path: "/services",
     canonical: content?.canonicalUrl,
     noIndex: content?.noIndex,

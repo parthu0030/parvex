@@ -73,9 +73,16 @@ export function WorkGrid({ projects }: { projects: ProjectCardView[] }) {
           <p className="text-[15px] text-[#6B6B6B] py-10">New case studies are on the way.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 lg:gap-x-8 gap-y-14 md:gap-y-20" aria-live="polite">
-            {visible.map((project) => (
-              <ProjectTile key={project.slug} project={project} />
-            ))}
+            {visible.map((project, i) =>
+              visible.length % 2 === 1 && i === visible.length - 1 && visible.length > 1 ? (
+                // An odd last card is centred rather than left beside an empty cell.
+                <div key={project.slug} className="md:col-span-2 md:w-[calc(50%-12px)] lg:w-[calc(50%-16px)] md:mx-auto">
+                  <ProjectTile project={project} />
+                </div>
+              ) : (
+                <ProjectTile key={project.slug} project={project} />
+              )
+            )}
           </div>
         )}
       </Container>

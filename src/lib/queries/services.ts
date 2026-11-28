@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { SERVICES as STATIC_SERVICES } from "@/data/services";
+import { RETIRED_SERVICE_SLUGS } from "@/data/services";
 
 // The static fallback has no uploaded media; components resolve imagery via
 // getServicePresentation(slug) in src/data/services.ts.
@@ -20,7 +21,7 @@ function staticServices() {
 export async function getPublishedServices() {
   try {
     return await prisma.service.findMany({
-      where: { published: true },
+      where: { published: true, slug: { notIn: RETIRED_SERVICE_SLUGS } },
       orderBy: { order: "asc" },
       include: { media: true },
     });
@@ -32,6 +33,7 @@ export async function getPublishedServices() {
 
 export async function getServiceBySlug(slug: string) {
   try {
+    if (RETIRED_SERVICE_SLUGS.includes(slug)) return null;
     return await prisma.service.findFirst({
       where: { slug, published: true },
       include: { media: true },

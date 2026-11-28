@@ -37,7 +37,7 @@ export function AboutHero() {
             className="lg:col-start-7 lg:col-span-6 text-base md:text-[19px] text-[#4A4A4A] leading-[1.7] tracking-[-0.01em]"
           >
             Parvex is a creative technology studio. We design and engineer
-            websites, applications and automation, and we photograph and film
+            websites and applications, and we photograph and film
             the brands behind them — so the whole experience feels like it was
             made by one careful pair of hands.
           </p>

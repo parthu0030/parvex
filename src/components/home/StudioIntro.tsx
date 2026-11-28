@@ -33,7 +33,7 @@ export function StudioIntro() {
               film the things that make a business{" "}
               <span className="text-[#8A8A8A]">
                 look credible and work properly — websites, applications,
-                automation and visual stories, under one roof.
+                brands and visual stories, under one roof.
               </span>
             </h2>
           </div>

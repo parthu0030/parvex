@@ -142,10 +142,13 @@ export function VideoFrame({ video, onOpen, sizes, priority, className }: VideoF
 /** Small uppercase meta line: category · duration. */
 export function VideoMeta({ video, className }: { video: Video; className?: string }) {
   return (
-    <p className={cn("flex items-center gap-2.5 text-[11px] tracking-[0.16em] uppercase text-white/45", className)}>
-      <span>{video.category}</span>
-      <span className="w-1 h-1 rounded-full bg-white/30" aria-hidden="true" />
-      <span className="tabular-nums">{formatDuration(video.duration)}</span>
+    <p className={cn("flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] tracking-[0.16em] uppercase text-white/45", className)}>
+      <span className="whitespace-nowrap">{video.category}</span>
+      {/* The dot travels with the duration, so a wrap never leaves it dangling. */}
+      <span className="inline-flex items-center gap-2.5 whitespace-nowrap">
+        <span className="w-1 h-1 rounded-full bg-white/30" aria-hidden="true" />
+        <span className="tabular-nums">{formatDuration(video.duration)}</span>
+      </span>
     </p>
   );
 }

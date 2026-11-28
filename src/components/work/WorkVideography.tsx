@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { IMAGERY } from "@/data/imagery";
 import { useReveal } from "@/hooks/useReveal";
 
 const CAPABILITIES = [
@@ -16,8 +15,8 @@ const CAPABILITIES = [
 /**
  * WorkVideography — film & motion capability.
  *
- * Deliberately no fake "play" buttons over still images. When real reels are
- * added to src/data/videography.ts they can be presented here.
+ * Stills from Parvex's own films (in colour) link through to the Videography
+ * Showcase, where the films play. No fake "play" buttons over still images.
  */
 export function WorkVideography() {
   const ref = useReveal<HTMLDivElement>({ threshold: 0.08 });
@@ -30,14 +29,25 @@ export function WorkVideography() {
     >
       <Container>
         <div ref={ref} data-reveal className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* Production imagery only — the stage still lives in the
-              Cinematic Frames collection above, so it isn't repeated here. */}
-          <div className="lg:col-span-6 grid grid-cols-5 gap-3 md:gap-4">
+          {/* Posters from two of the studio's own films, in colour. */}
+          <div className="lg:col-span-6 self-start grid grid-cols-5 gap-3 md:gap-4">
             <div className="col-span-3 relative aspect-[3/4] rounded-[12px] overflow-hidden bg-[#E8E8E8]">
-              <Image src={IMAGERY.videography.src} alt={IMAGERY.videography.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 60vw, 30vw" />
+              <Image
+                src="/videos/posters/festive-fashion-behind-the-scenes.jpg"
+                alt="Still from Parvex's festive-wear shoot: a model in a traditional outfit filmed against a red backdrop"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 60vw, 30vw"
+              />
             </div>
             <div className="col-span-2 relative rounded-[12px] overflow-hidden bg-[#E8E8E8]">
-              <Image src={IMAGERY.videoEditing.src} alt={IMAGERY.videoEditing.alt} fill className="object-cover img-mono" sizes="(max-width: 1024px) 40vw, 20vw" />
+              <Image
+                src="/videos/posters/navratri-nights.jpg"
+                alt="Still from Parvex's Navratri Nights event film: musicians performing to an evening crowd"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 40vw, 20vw"
+              />
             </div>
           </div>
 
@@ -53,8 +63,7 @@ export function WorkVideography() {
             <p className="text-[16px] text-[#6B6B6B] leading-[1.75] max-w-[520px]">
               From pre-production to final grade, we shoot and edit video with
               the same intent we bring to photography: every frame has a job.
-              Reels are shared on request for the kind of work you&apos;re
-              planning.
+              Watch the films in the Videography Showcase.
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 border-t border-[#E8E8E8]">
               {CAPABILITIES.map((c) => (
@@ -64,9 +73,14 @@ export function WorkVideography() {
                 </li>
               ))}
             </ul>
-            <Button href="/contact?service=videography" variant="primary" size="md" className="w-fit btn-interactive">
-              Ask for a reel
-            </Button>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button href="/work/videography-showcase" variant="primary" size="md" className="w-fit btn-interactive">
+                Watch the films
+              </Button>
+              <Button href="/contact?service=videography" variant="secondary" size="md" className="w-fit btn-interactive">
+                Start a video project
+              </Button>
+            </div>
           </div>
         </div>
       </Container>
